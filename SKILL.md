@@ -6,9 +6,8 @@ description: >
   English or Greek, must pass the PRE-OUTPUT VERIFICATION at the top of this
   file BEFORE the text is sent or written to a file. This is not advisory: the
   skill defines blocking checks. Trigger on every prose generation request and
-  on every Greek-containing artefact (email drafts, letters, regulatory text,
-  policy memos, .docx, .pdf, .md, code-embedded strings, AND every direct
-  response to the user in the console that contains Greek text). The Greek
+  on every Greek-containing artefact (email drafts, letters, articles, technical
+  documents, policy memos, .docx, .pdf, .md, code-embedded strings). The Greek
   language rules apply to every Greek sentence, including Greek text inside
   Python scripts, JSON payloads, slide content, table cells, and document
   headings. Hook-clean status is a minimum bar, not a quality certificate:
@@ -31,9 +30,6 @@ mentally scan the draft against the checklist below. Any match must be rewritten
 before output. This applies even when working at speed and even inside long
 generated documents.**
 
-**This check applies equally to console responses and to file content. There is no
-exemption for "short answers", "quick clarifications", or "inline explanations".**
-
 The most common failure mode is loading this skill, treating it as reference
 material, then producing Greek prose with the same anglicism patterns the skill
 explicitly bans. To prevent that:
@@ -54,27 +50,21 @@ explicitly bans. To prevent that:
 | `επεξεργάζονται από` | Same | `υπόκεινται σε επεξεργασία από` / `τα επεξεργάζεται η Χ` |
 | `διαπραγματεύονται από` | Same | `αποτελούν αντικείμενο διαπραγμάτευσης από` |
 | `ασχολούνται από` | Same | `εξετάζονται από` / `αντιμετωπίζονται από` |
-| Ακρωνύμιο ακολουθούμενο από ελληνικό ουσιαστικό χωρίς άρθρο (π.χ. `MiFIR αναφορά`) | Αγγλική σειρά λέξεων (Κανόνας §3) | Το ελληνικό ουσιαστικό πρώτα: `αναφορά κατά τον MiFIR` |
-| Ακρωνύμιο ως γραμματικό υποκείμενο χωρίς άρθρο (`GDPR προβλέπει`) | Απόντα οριστικό άρθρο (Κανόνας §5) | `ο GDPR προβλέπει`, `η MiFID απαιτεί` |
-| Ξένο ουσιαστικό πριν το ελληνικό (`MiFIR transaction reporting`) | Ξένος τροποποιητής σε θέση κεφαλής (Κανόνας §6) | Ελληνικό ουσιαστικό πρώτα: `αναφορά συναλλαγών κατά τον MiFIR` |
-| Ξένος σύνθετος τροποποιητής πριν το ελληνικό ουσιαστικό (`real-time επεξεργασία`) | Ίδια οικογένεια (Κανόνας §6 Πρότυπο Β) | Ελληνικό ουσιαστικό πρώτα: `επεξεργασία real-time` |
-| Ξένη επωνυμία χωρίς άρθρο (`από Chase`, `μέσω UBS`) | Απόντα οριστικό άρθρο (Κανόνας §5) | `από την Chase`, `μέσω της UBS` |
-| `, και` οπουδήποτε σε ελληνικό κείμενο | Αγγλικισμός (Oxford comma, απαγορεύεται από τον Κανόνα §7) | Αφαίρεσε το κόμμα: `, και` → ` και` |
-| `;` μέσα σε πρόταση ακολουθούμενο από πεζό ελληνικό γράμμα | Αγγλικό semicolon σε ελληνικό κείμενο (Κανόνας §8) | Αντικατάστησε με `·` (U+0387), χωρίς κενό πριν |
-| `αμφίπλευρ*` για σχέσεις ή συμφωνίες δύο μερών | Λάθος λέξη για "bilateral" (Κανόνας §9) | Αντικατάστησε με `διμερ*` (διμερής, διμερή, διμερείς) |
-| Αγγλικός χρηματοοικονομικός ή νομικός όρος ως ουσιαστικό στο ελληνικό κείμενο | Αγγλικισμός (Κανόνας §11) | Χρησιμοποίησε ελληνικό ισοδύναμο από τον πίνακα §11 |
-| Κατά λέξη μετάφραση αγγλικής έκφρασης (π.χ. `στατιστικά λεπτό δείγμα`) | Calque (Κανόνας §12) | Ξανάγραψε σε φυσικά ελληνικά |
-| `δίκιο σου` ως αυτόνομη επιβεβαίωση | Λάθος ελληνικό ιδίωμα (Κανόνας §13) | `Έχεις δίκιο` |
-| `αξιολόγηση ορθότητας` σε MiFID/ρυθμιστικό πλαίσιο | Λάθος MiFID II όρος | `αξιολόγηση συμβατότητας` (Άρθρο 25 παρ. 3 Ν. 4514/2018) |
-| Ελληνικό ουσιαστικό ή άρθρο + ελληνική μετοχή/επίθετο χωρίς συνδετικό ρήμα (`Skill ενημερωμένο`) | Τηλεγραφικός αγγλικισμός, ύφος "X updated" (Κανόνας §15) | Πλήρης ελληνική πρόταση: `Το Skill ενημερώθηκε` |
+| Acronym followed by Greek noun without article (`HTML αναφορά`, `GDPR απαιτήσεις`) | Anglicism word order (Rule §3) | `αναφορά κατά την HTML` / `απαιτήσεις του GDPR` |
+| Acronym used as grammatical subject without article (`GDPR προβλέπει`, `AI Act απαιτεί`) | Missing definite article (Rule §5) | `ο GDPR προβλέπει`, `ο AI Act απαιτεί` |
+| Foreign noun before Greek noun (`το Orders πίνακας`, `API documentation εργασία`) | Foreign modifier in head position (Rule §6) | Greek noun first: `ο πίνακας Orders`, `εργασία πάνω στο API documentation` |
+| Foreign compound modifier before Greek head (`real-time επεξεργασία`) | Same family (Rule §6 Pattern B) | Greek noun first: `επεξεργασία real-time` |
+| Brand/foreign-name without article (`από Apple`, `μέσω Google`, `μέσω BBC`) | Missing definite article (Rule §5) | `από την Apple`, `μέσω της Google`, `μέσω του BBC` |
+| `, και` anywhere in Greek text | Anglicism (Oxford comma; banned by Rule §7) | Remove the comma: `, και` → ` και` |
+| `;` mid-sentence followed by lowercase Greek letter | English semicolon misused as άνω τελεία (Rule §8) | Replace `;` with `·` (U+0387), keep no leading space |
+| `αμφίπλευρ*` referring to two-party relations / agreements / documents | Wrong word for "bilateral" (Rule §9) | Replace with `διμερ*` (διμερής, διμερή, διμερείς) |
+| English legal or business term used as Greek prose noun | Anglicism in Greek prose (Rule §11) | Use Greek equivalent from the table in Rule §11 |
+| Greek noun/article + Greek participle/adjective with no conjugated verb (`Skill ενημερωμένο`) | Telegraphic anglicism (Rule §15) | Full Greek sentence with conjugated verb: `Το Skill ενημερώθηκε` |
 
 ### Hard-block terms reference
 
 The following English terms commonly appear in Greek professional prose but should be
-replaced with their Greek equivalents. Extend this list with your own industry-specific
-overrides in a local file.
-
-Key substitutions:
+replaced with their Greek equivalents. Extend this list with your own overrides.
 
 | English | Greek |
 |---|---|
@@ -98,19 +88,19 @@ Key substitutions:
 | covenant | ρήτρα |
 | redline | παρατήρηση επί του κειμένου |
 
-Technical MiFID-anchored terms that may remain English: audit trail, letterbox,
-retrocession, outsourcing, best execution, due diligence, compliance, threshold,
-tipping-off, thematic review, investment advice, QET, TCA.
+Technical terms anchored in specific regulatory frameworks (e.g. audit trail, due
+diligence, outsourcing, threshold, tipping-off) may remain in their original form
+when used as defined terms in their framework context.
 
 ### Scope reminder
 
 These checks apply equally to:
-- Direct prose responses to the user in the console (every sentence, every turn).
+- Direct prose responses to the user.
 - Strings inside generated code (e.g. Greek text inside `add_para("...")` calls in
   python-docx scripts that build .docx files for the user).
 - Headings, table cell text, footers, captions, and metadata fields.
-- Email drafts, letters, regulatory memos, policy documents, and any deliverable
-  the user may forward to a third party.
+- Email drafts, letters, memos, policy documents, and any deliverable the user may
+  forward to a third party.
 
 If you only check the chat-level prose and skip the embedded strings, the
 deliverable will fail. Always scan the artefact's text content, not just the
@@ -185,6 +175,146 @@ Never use these:
 Avoid rigid sequences like "First, second, third, finally" unless the user
 explicitly asks for a step-by-step format.
 
+### AI catchphrases and stock phrases
+
+Source: Wikipedia WikiProject AI Cleanup pattern catalogue. These are the
+highest-frequency tells editors flag when they suspect a draft is
+machine-generated. Most apply to English text; several have direct Greek
+analogues (noted inline).
+
+Significance, legacy, and trends:
+- "stands as / serves as a testament", "is a testament to"
+- "underscores / highlights its importance"
+- "reflects broader [trends / themes]"
+- "symbolizes its ongoing / enduring / lasting"
+- "contributing to the [field / discourse / understanding]"
+- "setting the stage for"
+- "marking / shaping the [era / period]"
+- "represents a shift", "marks a shift"
+- "key turning point", "watershed moment"
+- "evolving landscape", "focal point"
+- "indelible mark", "deeply rooted"
+
+Greek analogue: «αποτελεί ορόσημο», «σηματοδοτεί νέα εποχή»,
+«διαμορφώνει το τοπίο» land as the same kind of grandstanding. Use only
+when a specific, concrete claim about scale or consequence is being made.
+
+Promotional and travel-brochure language:
+- "boasts a", "boasts" as a verb
+- "rich [history / heritage / tradition]"
+- "profound" outside specifically philosophical contexts
+- "showcasing", "exemplifies"
+- "commitment to [excellence / quality]"
+- "natural beauty", "nestled", "in the heart of"
+- "renowned", "featuring", "diverse array"
+
+Vague attribution:
+- "Industry reports", "Observers have cited"
+- "Experts argue", "Some critics argue"
+- "Several sources / publications [say / report]"
+- "Such as" introducing a long, exhaustive list (just give the list, or
+  use "including" sparingly)
+
+Section and structural formulae:
+- "Despite its ..., faces several challenges"
+- "Despite these challenges, ..."
+- "Challenges and Legacy" as a heading
+- "Future Outlook" as a heading
+
+Greek analogue: «Παρά τις προκλήσεις...», «Μελλοντικές προοπτικές» as a
+default closing section reads as the same template tic.
+
+### Additional overused AI vocabulary
+
+Not already in the main banned-vocabulary block:
+
+| Avoid | Plain alternative |
+|---|---|
+| Additionally (sentence opener) | also, and |
+| align with | match, fit |
+| boasts | has |
+| bolstered | strengthened, helped |
+| delve into | look at, examine, study |
+| emphasizing | stressing |
+| enduring | lasting |
+| enhance | improve |
+| fostering | growing, helping |
+| garner | earn, get, attract |
+| highlight (as a verb) | point out, show, mark |
+| key (as an adjective) | most important, main |
+| meticulous, meticulously | careful, carefully, exact |
+| showcase | show, present |
+| testament | proof, sign |
+| underscore (as a verb) | stress, point out |
+| valuable | useful |
+| vibrant | lively |
+
+The "use plain alternatives" principle applies even when the formal register
+of the document allows precise technical vocabulary. "Important" beats
+"crucial" beats "pivotal" in almost every context that is not specifically
+literary.
+
+---
+
+## Structural patterns to avoid
+
+These are sentence-level and paragraph-level patterns that mark text as
+machine-generated even when individual words are unobjectionable. They
+appear in English and Greek output alike.
+
+### Negative parallelism
+
+Never write:
+- "Not just X, but also Y"
+- "Not X, but Y" (as a stylistic flourish, not when literally needed)
+- "It is not ..., it's ..."
+- "No ..., no ..., just ..."
+
+The construction is fine once. Used twice in the same piece, it lands as a
+tic. Greek analogue: «Όχι απλώς X, αλλά και Y» suffers the same fate.
+Pick a positive statement instead.
+
+### Rule-of-three abuse
+
+Avoid stacking three adjectives, three short phrases, or three "X, Y, and Z"
+clauses in close succession. A triplet that fits a specific sentence is
+fine. A triplet in every paragraph is a tell. Vary sentence length and
+rhythm; do not let "A, B, and C" become a default.
+
+### Elegant variation
+
+Do not cycle through synonyms to avoid repeating a word. If "company" is
+the right word, write "company" three times. Do not switch to "firm",
+"organization", "entity" merely for variety. Repetition is honest;
+synonym-cycling is mannered. The same applies to Greek: «η εταιρεία» three
+times beats «η εταιρεία», «ο όμιλος», «ο φορέας» when the referent is one
+specific company.
+
+### Avoidance of copulatives
+
+Do not substitute the plain copulas "is", "are", "has", or "have" with
+stand-ins like:
+- serves as / stands as / marks / represents (in place of "is")
+- features / offers / maintains / boasts (in place of "has")
+- "X refers to ..." as a lead sentence
+
+Plain copulas are the right default. Stand-ins are appropriate only when
+they carry distinct meaning the copula does not. Greek analogue: do not
+default to «λειτουργεί ως», «αποτελεί», «συνιστά» when «είναι» is correct.
+
+### Reference and citation hygiene (when generating prose with citations)
+
+If the deliverable carries citations:
+- Verify external links resolve before listing them.
+- Do not invent DOIs, ISBNs, or page numbers.
+- Strip `utm_source` and other tracking parameters from URLs.
+- Do not declare named references that the article body never uses.
+- Do not produce broken markup (mismatched brackets, half-closed tags).
+- Watch for marker tokens that leak from upstream tooling (`turn0search0`,
+  `oaicite`, `oai_citation`, `contentReference`, `attached_file`,
+  `grok_card`, `attribution`, `attributableIndex`). If any appear in the
+  draft, strip them before output.
+
 ---
 
 ## Formatting Rules
@@ -202,6 +332,31 @@ Do not over-format with heavy headings and bullet lists unless the user asks for
 structured outline.
 
 Do not repeat the same opening sentence structure across responses.
+
+**Title Case in headings is banned.** Use sentence case ("Building the redirect map"),
+not Title Case ("Building The Redirect Map"). Proper nouns and acknowledged
+conventions in the relevant style guide are the only exceptions.
+
+**Do not over-bold.** Reserve bold for words the reader's eye must catch on a
+re-scan: a defined term, a critical warning, a one-word answer in a Q&A.
+Bolding every list item's leading phrase is a tell.
+
+**Inline-header vertical lists are banned by default.** A bulleted list where
+every item is `**Boldface header:** description sentence` is the most common
+AI structural tic. Use either prose paragraphs OR a clean bullet list of short
+items; do not blend the two. The two acceptable exceptions are: a comparison
+matrix that genuinely needs a `key: value` shape, and a glossary.
+
+**Use straight quotation marks.** `"Like this"`, not curly `"like this"`. Same
+for apostrophes: `it's`, not `it's`. The skill assumes UTF-8 throughout; the
+straight-vs-curly distinction is purely a generated-text artefact.
+
+**Do not insert horizontal rules before headings.** Lines like `---` directly
+above a `##` line are a Wikipedia-flagged AI tell. The heading is its own
+visual break; trust it.
+
+**Do not skip heading levels.** Never jump from `##` to `####`. Each level
+steps down by exactly one.
 
 ---
 
@@ -236,8 +391,7 @@ language.
 ## Greek Language Rules
 
 Apply these rules whenever output contains Greek text, including mixed Greek-English
-documents (regulatory, HR, legal, internal memos). These rules apply equally to
-console responses and to file content: there is no context where they are suspended.
+documents (legal, technical, academic, business, journalism).
 
 ### 1. No em dashes in Greek text
 
@@ -250,7 +404,7 @@ Deponent verbs have a passive/middle form (-μαι) but carry active meaning. Th
 subject is always the agent, never the recipient of the action. Do NOT use them to
 express a true passive.
 
-Common deponents in formal/regulatory writing:
+Common deponents in formal writing:
 
 | Verb | Meaning | Wrong (passive misuse) | Right |
 |------|---------|------------------------|-------|
@@ -280,10 +434,10 @@ anglicism and is wrong in Greek.
 
 | Wrong (anglicism) | Right |
 |---|---|
-| MiFIR προβλέψεις | προβλέψεις της MiFIR |
+| HTML προδιαγραφές | προδιαγραφές της HTML |
 | GDPR απαιτήσεις | απαιτήσεις του GDPR |
-| risk manager αρμοδιότητες | αρμοδιότητες του risk manager |
-| σύμφωνα με DORA διατάξεις | σύμφωνα με τις διατάξεις της DORA |
+| project manager αρμοδιότητες | αρμοδιότητες του project manager |
+| σύμφωνα με ISO πρότυπα | σύμφωνα με τα πρότυπα του ISO |
 
 The pattern is always: head noun first, then genitive of the modifier.
 
@@ -293,28 +447,28 @@ When a Greek article or pronoun is needed for an acronym or foreign term, determ
 the gender by translating the underlying noun to Greek and using that noun's gender.
 
 Step-by-step process:
-1. What is the acronym/term? (e.g., MiFID, GDPR, DORA, AIF, AIFMD)
-2. What does it stand for in English? (e.g., Directive, Regulation, Act, Fund)
+1. What is the acronym/term? (e.g., GDPR, AI Act, HTML, API, ISO)
+2. What does it stand for in English? (e.g., Regulation, Language, Interface, Organization)
 3. What is the Greek translation of that noun?
 4. What gender is the Greek noun?
 5. Use that gender for all articles and pronouns referring to it.
 
-Reference table for common regulatory terms:
+Reference table for common acronyms across domains:
 
-| Term | Full name | Greek noun | Gender | Use |
-|------|-----------|------------|--------|-----|
-| MiFID | Directive | Οδηγία | θηλυκό | η MiFID, της MiFID |
-| MiFIR | Regulation | Κανονισμός | αρσενικό | ο MiFIR, του MiFIR |
+| Term | Full name (head noun) | Greek noun | Gender | Use |
+|------|------------------------|------------|--------|-----|
 | GDPR | Regulation | Κανονισμός | αρσενικό | ο GDPR, του GDPR |
-| DORA | Regulation (Act) | Κανονισμός | αρσενικό | ο DORA, του DORA |
-| AIFMD | Directive | Οδηγία | θηλυκό | η AIFMD, της AIFMD |
-| SFDR | Regulation | Κανονισμός | αρσενικό | ο SFDR, του SFDR |
-| PRIIPs | Regulation | Κανονισμός | αρσενικό | ο PRIIPs, του PRIIPs |
-| EMIR | Regulation | Κανονισμός | αρσενικό | ο EMIR, του EMIR |
-| AIF | Fund | Αμοιβαίο Κεφάλαιο / Ταμείο | ουδέτερο | το AIF, του AIF |
-| MiCA | Regulation | Κανονισμός | αρσενικό | ο MiCA, του MiCA |
-| NIS2 | Directive | Οδηγία | θηλυκό | η NIS2, της NIS2 |
 | AI Act | Regulation | Κανονισμός | αρσενικό | ο AI Act, του AI Act |
+| HTML | Language | Γλώσσα | θηλυκό | η HTML, της HTML |
+| CSS | Sheet (Stylesheet) | Φύλλο | ουδέτερο | το CSS, του CSS |
+| API | Interface | Διεπαφή | θηλυκό | η API, της API |
+| URL | Locator | Εντοπιστής | αρσενικό | ο URL, του URL |
+| ISO | Organization | Οργανισμός | αρσενικό | ο ISO, του ISO |
+| W3C | Consortium | Κοινοπραξία | θηλυκό | η W3C, της W3C |
+| IEEE | Institute | Ινστιτούτο | ουδέτερο | το IEEE, του IEEE |
+| WHO | Organization | Οργανισμός | αρσενικό | ο WHO, του WHO |
+| NDA | Agreement | Συμφωνία | θηλυκό | η NDA, της NDA |
+| LLC | Company | Εταιρεία | θηλυκό | η LLC, της LLC |
 
 ### 5. Definite article with acronyms and foreign names
 
@@ -324,12 +478,12 @@ names when they are grammatical subjects or objects. Do not drop the article.
 | Wrong | Right |
 |---|---|
 | GDPR προβλέπει | ο GDPR προβλέπει |
-| MiFID απαιτεί | η MiFID απαιτεί |
-| DORA εισάγει υποχρεώσεις | ο DORA εισάγει υποχρεώσεις |
-| Σύμφωνα με AIFMD | Σύμφωνα με την AIFMD |
+| AI Act απαιτεί | ο AI Act απαιτεί |
+| ISO εισάγει νέο πρότυπο | ο ISO εισάγει νέο πρότυπο |
+| Σύμφωνα με W3C | Σύμφωνα με την W3C |
 
 Exception: after a preposition that forms a compound with the article (e.g., "κατά
-τον GDPR", "βάσει της MiFID"), the article is present but fused with the preposition.
+τον GDPR", "βάσει της W3C"), the article is present but fused with the preposition.
 
 ### 6. Word order: Greek noun before foreign modifier (παράθεση)
 
@@ -344,6 +498,7 @@ foreign identifier as apposition.
 | το 'humanized-text' skill | το skill 'humanized-text' |
 | η 'user_id' μεταβλητή | η μεταβλητή 'user_id' |
 | ο 'Orders' πίνακας | ο πίνακας 'Orders' |
+| το markdown-it library | το library markdown-it |
 
 **Pattern B - Greek noun + foreign compound modifier:**
 When a foreign compound (e.g., "cross-session", "real-time", "back-office") acts as
@@ -371,10 +526,11 @@ generated for the user.** Any Greek sentence in any response must follow it.
 
 Στα ελληνικά **δεν προηγείται κόμμα** του «και» όταν αυτό συνδέει δύο όρους ή δύο προτάσεις σε απλή σύνδεση. Το πρότυπο `, και` είναι αγγλικισμός (Oxford comma).
 
-Παραδείγματα:
-
-- Λάθος: Διαβάζω, και γράφω. / Σωστό: Διαβάζω και γράφω.
-- Λάθος: Έγραψε την επιστολή, και την υπέγραψε. / Σωστό: Έγραψε την επιστολή και την υπέγραψε.
+| Λάθος | Σωστό |
+|---|---|
+| Διαβάζω, και γράφω. | Διαβάζω και γράφω. |
+| Έγραψε την επιστολή, και την υπέγραψε. | Έγραψε την επιστολή και την υπέγραψε. |
+| Η Apple, η Microsoft, και η Sony συμμετέχουν. | Η Apple, η Microsoft και η Sony συμμετέχουν. |
 
 **Εξαιρέσεις (όπου το κόμμα είναι σωστό):**
 
@@ -395,9 +551,15 @@ generated for the user.** Any Greek sentence in any response must follow it.
 
 **Στίξη:** δεν προηγείται κενό· ακολουθεί κενό· η επόμενη λέξη γράφεται με **πεζό** αρχικό γράμμα. Η παύση είναι ισχυρότερη του κόμματος και ελαφρύτερη της τελείας.
 
-Παραδείγματα:
-- Λάθος: Έγραψα την έκθεση; δεν την έστειλα ακόμα.
-- Σωστό: Έγραψα την έκθεση· δεν την έστειλα ακόμα.
+| Λάθος (αγγλικό semicolon) | Σωστό (άνω τελεία) |
+|---|---|
+| Έγραψα την έκθεση; δεν την έστειλα ακόμα. | Έγραψα την έκθεση· δεν την έστειλα ακόμα. |
+| Είδα τρεις τομείς: συμμόρφωση; λειτουργίες; τεχνολογία. | Είδα τρεις τομείς: συμμόρφωση· λειτουργίες· τεχνολογία. |
+| Η Microsoft δεν συμφώνησε; η Apple επανήλθε με νέα πρόταση. | Η Microsoft δεν συμφώνησε· η Apple επανήλθε με νέα πρόταση. |
+
+**Πηγές:**
+- [Άνω τελεία (Βικιπαίδεια)](https://el.wikipedia.org/wiki/%CE%86%CE%BD%CF%89_%CF%84%CE%B5%CE%BB%CE%B5%CE%AF%CE%B1)
+- [Εισαγωγή άνω τελείας (sch.gr)](https://users.sch.gr/ipap/Ellinikos%20Politismos/diafora/greek-ano-teleia.htm)
 
 ### 9. Διμερής / Πολυμερής / Μονομερής
 
@@ -409,17 +571,22 @@ generated for the user.** Any Greek sentence in any response must follow it.
 | multilateral | πολυμερής | πολυμερής σύμβαση |
 | unilateral | μονομερής | μονομερής δήλωση |
 
-**Όχι «αμφίπλευρος».** Το επίθετο «αμφίπλευρος» στα ελληνικά αναφέρεται σε κάτι που **έχει δύο πλευρές** (π.χ. αμφίπλευρη παράλυση, αμφίπλευρο σχέδιο), όχι σε σχέση μεταξύ δύο μερών.
+**Όχι «αμφίπλευρος».** Το επίθετο «αμφίπλευρος» στα ελληνικά αναφέρεται σε κάτι που **έχει δύο πλευρές** (π.χ. αμφίπλευρη παράλυση, αμφίπλευρο σχέδιο), όχι σε σχέση μεταξύ δύο μερών. Παρομοίως, «αμφοτεροβαρής σύμβαση» είναι ξεχωριστός νομικός όρος (= και τα δύο μέρη έχουν αντιπαροχή) και δεν είναι ταυτόσημος με bilateral.
 
 | Λάθος | Σωστό |
 |---|---|
 | αμφίπλευρα κείμενα | διμερή κείμενα |
 | αμφίπλευρη συμφωνία | διμερής συμφωνία |
+| αμφίπλευρη βεβαίωση | διμερής βεβαίωση |
 | αμφίπλευρες σχέσεις | διμερείς σχέσεις |
+
+**Πηγές:**
+- [Διμερείς σχέσεις (Βικιπαίδεια)](https://el.wikipedia.org/wiki/%CE%94%CE%B9%CE%BC%CE%B5%CF%81%CE%B5%CE%AF%CF%82_%CF%83%CF%87%CE%AD%CF%83%CE%B5%CE%B9%CF%82)
+- [Διεθνείς Συμφωνίες, διμερείς ή πολυμερείς (Νομική Υπηρεσία της Δημοκρατίας)](https://www.law.gov.cy/law/law.nsf/internationaltreaties-el/internationaltreaties-el)
 
 ### 10. Κλιτική αντωνυμία (clitic pronoun) για γνωστό αντικείμενο
 
-Όταν ένα μεταβατικό ρήμα αναφέρεται σε αντικείμενο που έχει ήδη αναφερθεί ή είναι κατανοητό από τα συμφραζόμενα, η ελληνική απαιτεί τον αδύνατο τύπο της αντωνυμίας (το, την, τα, τον κ.λπ.) πριν από το ρήμα.
+Όταν ένα μεταβατικό ρήμα αναφέρεται σε αντικείμενο που έχει ήδη αναφερθεί ή είναι κατανοητό από τα συμφραζόμενα, η ελληνική απαιτεί τον αδύνατο τύπο της αντωνυμίας (το, την, τα, τον κ.λπ.) πριν από το ρήμα. Η παράλειψή του δίνει την εντύπωση αμετάβατου ρήματος ή αγγλισμού.
 
 | Λάθος | Σωστό |
 |---|---|
@@ -430,21 +597,17 @@ generated for the user.** Any Greek sentence in any response must follow it.
 
 Ο κανόνας: αν το αντικείμενο είναι γνωστό από τα προηγούμενα, βάλε πάντα τον αδύνατο τύπο (το/την/τα/τον) πριν το ρήμα.
 
-### 11. Αγγλισμοί στο νομικό και χρηματοοικονομικό λεξιλόγιο
+### 11. Αγγλισμοί στο νομικό και επαγγελματικό λεξιλόγιο
 
-Πολλοί αγγλικοί νομικοί και χρηματοοικονομικοί όροι έχουν φυσικά ελληνικά ισοδύναμα και πρέπει να αντικαθίστανται στο ελληνικό πεζό κείμενο, ακόμα και όταν ο αυτοματοποιημένος έλεγχος δεν τους εντοπίσει.
+Πολλοί αγγλικοί νομικοί και επαγγελματικοί όροι έχουν φυσικά ελληνικά ισοδύναμα και πρέπει να αντικαθίστανται στο ελληνικό πεζό κείμενο.
 
-**Κανόνας:** Αν ένας αγγλικός όρος δεν είναι αγκυρωμένος σε συγκεκριμένη ευρωπαϊκή νομοθεσία ως τεχνικός ορισμός (MiFID, DORA, EBA κ.λπ.), χρησιμοποίησε το ελληνικό ισοδύναμο.
+**Κανόνας:** Αν ένας αγγλικός όρος δεν αποτελεί αγκυρωμένο τεχνικό ορισμό συγκεκριμένου κανονιστικού πλαισίου, χρησιμοποίησε το ελληνικό ισοδύναμο.
 
 | Αγγλικό (αποφεύγεται στο πεζό κείμενο) | Ελληνικό ισοδύναμο |
 |---|---|
-| substance KPIs | δείκτες ουσίας |
 | capacity assessment | αξιολόγηση λειτουργικής επάρκειας |
-| Compliance Officers | Υπεύθυνοι Κανονιστικής Συμμόρφωσης |
-| suitability assessment (σε πεζό κείμενο) | αξιολόγηση καταλληλότητας |
-| appropriateness assessment | αξιολόγηση συμβατότητας |
 | governance gate | μηχανισμός εγκρίσεων διακυβέρνησης |
-| onboarding | ένταξη πελατών |
+| onboarding | ένταξη / εισαγωγή |
 | reporting | υποβολή αναφορών / αναφορά |
 | monitoring | παρακολούθηση / εποπτεία |
 | softened / softer | μαλακότερο / ηπιότερο |
@@ -454,13 +617,9 @@ generated for the user.** Any Greek sentence in any response must follow it.
 | covenant | ρήτρα |
 | redline | παρατήρηση επί του κειμένου |
 
-**Τεχνικοί όροι που παραμένουν αγγλικά** (λόγω MiFID/DORA/EBA άγκυρας): audit trail, letterbox, retrocession, outsourcing, best execution, due diligence, compliance (ως τμήμα), threshold, tipping-off, thematic review, investment advice, QET, TCA.
-
 ### 12. Calques — μη μεταφράζεις αγγλικές εκφράσεις κατά λέξη
 
 Ένας calque είναι η λεξιλογική δανεική μετάφραση αγγλικής έκφρασης που ακούγεται ξένη στα ελληνικά. Τεχνικά ορθή φράση μπορεί να είναι φυσικά αδόκιμη.
-
-**Κανόνας ύφους για επίσημα/νομικά κείμενα:** Αποφεύγω δραματικά ή μεταφορικά ρήματα ακόμα και αν είναι τεχνικά ορθά ελληνικά. Στο επίσημο κείμενο, το ουδέτερο ισοδύναμο είναι πάντα η καλύτερη επιλογή.
 
 | Αγγλική έκφραση | Calque (λάθος) | Φυσικά ελληνικά |
 |---|---|---|
@@ -470,7 +629,6 @@ generated for the user.** Any Greek sentence in any response must follow it.
 | window of opportunity | παράθυρο ευκαιρίας | ευκαιρία · κατάλληλη συγκυρία |
 | moving forward | προχωρώντας μπροστά | στη συνέχεια · από εδώ και πέρα |
 | track record | αρχείο επιδόσεων | ιστορικό · αποδεδειγμένη εμπειρία |
-| due diligence (ως ρήμα) | κάνω due diligence | διενεργώ έλεγχο due diligence |
 
 **Δοκιμή:** Διάβασε τη φράση σε έναν φυσικό ομιλητή. Αν χαμογελάσει ή απορεί, είναι calque.
 
@@ -494,15 +652,13 @@ generated for the user.** Any Greek sentence in any response must follow it.
 - Αγγλισμούς που δεν βρίσκονται στη λίστα
 - Ρυθμό και φυσικότητα κειμένου
 
-**Υποχρέωση:** Πριν παραδοθεί οποιοδήποτε ελληνικό κείμενο — σε αρχείο ή στην κονσόλα — διαβάζεται ολόκληρο με κριτικό μάτι ως εάν να ήταν γραμμένο από ξένο. Η ερώτηση δεν είναι «πέρασε τον έλεγχο;» αλλά «ακούγεται φυσικά ελληνικά;».
+**Υποχρέωση:** Πριν παραδοθεί οποιοδήποτε ελληνικό κείμενο, διαβάζεται ολόκληρο με κριτικό μάτι. Η ερώτηση δεν είναι «πέρασε τον έλεγχο;» αλλά «ακούγεται φυσικά ελληνικά;».
 
 Το αυτόματο pass είναι **ελάχιστη προϋπόθεση**, όχι πιστοποίηση ποιότητας.
 
----
-
 ### 15. Τηλεγραφικές φράσεις — αποφεύγε τη σύνταξη «ουσιαστικό + μετοχή»
 
-Στα αγγλικά είναι σύνηθες να γράφεται «Skill updated», «Task done», «Memory saved» ως σύντομη ανακοίνωση. Στα ελληνικά το αντίστοιχο ακούγεται ξένο· χρειάζεται πλήρης πρόταση με ρήμα.
+Στα αγγλικά είναι σύνηθες να γράφεται «Task done», «Memory saved» ως σύντομη ανακοίνωση. Στα ελληνικά το αντίστοιχο ακούγεται ξένο· χρειάζεται πλήρης πρόταση με ρήμα.
 
 | Λάθος (τηλεγραφικό) | Σωστό |
 |---|---|
@@ -510,9 +666,8 @@ generated for the user.** Any Greek sentence in any response must follow it.
 | Αρχείο αποθηκευμένο | Το αρχείο αποθηκεύτηκε. |
 | Μνήμη ενημερωμένη | Η μνήμη ενημερώθηκε. |
 | Εργασία ολοκληρωμένη | Η εργασία ολοκληρώθηκε. |
-| Έγγραφο παραδοτέο | Το έγγραφο παραδόθηκε. |
 
-**Κανόνας:** Κάθε ελληνική ανακοίνωση πρέπει να έχει ρήμα. Ουσιαστικό + μετοχή/επίθετο χωρίς ρήμα είναι αγγλικισμός.
+**Κανόνας:** Κάθε ελληνική ανακοίνωση πρέπει να έχει ρήμα. Ουσιαστικό + μετοχή/επίθετο χωρίς ρήμα αντιγράφει το αγγλικό «noun + past participle» τηλεγραφικό ύφος.
 
 ---
 

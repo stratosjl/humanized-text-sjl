@@ -1,150 +1,79 @@
 # humanized-text
 
-A Claude Code skill that enforces clear, natural writing across all AI output. It blocks the filler phrases, AI jargon, and formatting habits that make generated text feel synthetic. For Greek-language output, it adds a second layer: grammar rules specific to mixed Greek-English professional writing, covering deponent verb misuse, word order anglicisms, and punctuation errors that automated checks miss.
+A Claude Code skill that applies a natural human writing style to all generated prose, in English and Greek. The skill is a single Markdown file (`SKILL.md`) defining blocking pre-output checks: a list of banned phrases and AI catchphrases, a set of structural patterns to avoid (negative parallelism, rule-of-three abuse, elegant variation, copulative avoidance), formatting rules (no em dashes ever, no Title Case headings, no inline-header vertical lists, no curly quotes, no horizontal rules before headings), and a comprehensive Greek grammar section covering deponent verbs, genitive word order, acronym gender, definite articles with foreign names, word order with foreign modifiers, Oxford-comma in Greek, the middle dot versus the English semicolon, bilateral/multilateral terminology, clitic pronouns, Greek anglicisms in legal and financial writing, calques, common idiomatic errors, automated-check limits, and telegraphic phrases without conjugated verbs.
 
----
+## Why this exists
 
-## What it does
+Out of the box, an LLM writes the way the internet writes when the internet is being polite and trying to sound smart. That voice has tells: "stands as a testament to", "navigating the complexities of", "underscoring the importance of", excessive triplets, em dashes everywhere, copulative-avoidance, inline-header vertical lists. This skill is a counter-list. It tells the model what NOT to do, with specific replacements where the wrong thing is the easy default.
 
-When you load this skill, Claude applies two overlapping sets of rules to every response before output.
+The Greek section is harder to find elsewhere. Greek-language LLM output frequently misuses deponent verbs as passives, drops definite articles before acronyms, places foreign modifiers before Greek head nouns, and substitutes the English semicolon for the middle dot. Each of those is a specific syntactic anglicism with a documented fix. Beyond the structural errors, the skill also covers legal and financial anglicisms (terms with good Greek equivalents that AI consistently leaves in English), calques (literal translations that read as translated rather than written), and telegraphic noun-plus-participle constructions ("Skill ενημερωμένο" instead of "Το Skill ενημερώθηκε"). The rules are stable Greek grammar; the examples in the tables are illustrative.
 
-**English (and language-agnostic) rules:**
+## Install
 
-- Bans assistant filler ("Absolutely!", "I'd be happy to help", "It's worth noting that...")
-- Bans overused AI vocabulary (leverage, robust, seamless, pivotal, ecosystem, nuanced, holistic...)
-- Bans corporate jargon (synergies, best practices, pain points, low-hanging fruit, stakeholders...)
-- Bans clickbait hooks ("In today's digital age...", "Here's what nobody tells you...")
-- Bans em dashes and en dashes in all output
-- Bans template structure phrases ("Let's dive in", "Here are some key takeaways:")
-- Enforces direct openings - no preamble, no explanation of what's about to happen
+The skill is a single file. Drop it into your Claude Code skills directory:
 
-**Greek language rules (15 numbered rules):**
-
-1. No em dashes in Greek text
-2. Correct use of deponent verbs (διαχειρίζομαι, επεξεργάζομαι, διαπραγματεύομαι) - the single most common grammatical error in AI-generated Greek
-3. Genitive word order: Greek head noun first, then the foreign modifier
-4. Correct grammatical gender for acronyms and foreign terms (MiFID = η, GDPR = ο, DORA = ο)
-5. Definite article required before acronyms and foreign brand names in subject/object position
-6. Greek noun before foreign modifier in both category+identifier and compound-modifier patterns
-7. No Oxford comma before "και"
-8. Greek middle dot (·) instead of semicolon; the Greek semicolon is a question mark
-9. Two-party agreements use διμερής, not αμφίπλευρος
-10. Clitic pronoun required for known objects (το, την, τα, τον before the verb)
-11. Greek equivalents for legal and financial anglicisms
-12. No calques (literal translations of English collocations)
-13. Common idiomatic errors ("Δίκιο σου" is wrong; "Έχεις δίκιο" is right)
-14. Automated checks are a floor, not a ceiling - critical reading required
-15. No telegraphic noun+participle constructions ("Skill ενημερωμένο" is wrong; "Το Skill ενημερώθηκε" is right)
-
-The skill includes a PRE-OUTPUT VERIFICATION table: a blocking checklist of the highest-frequency errors with regex-style trigger patterns, likely errors, and exact fixes. Claude is expected to scan every prose response against this table before sending.
-
----
-
-## Who this is for
-
-Anyone who writes regularly with Claude and is bothered by the predictable patterns AI text tends to fall into. The English rules alone are useful. The Greek section is specifically for people who write professional Greek - regulatory documents, legal correspondence, financial reports - where AI-generated output often reads like translated English rather than natively written Greek.
-
-The Greek rules were developed through real-world use in financial and regulatory contexts, where mistranslated grammar (especially deponent verb misuse and word order anglicisms) is both common and consequential.
-
----
-
-## How to install
-
-### As a Claude Code skill
-
-Copy `SKILL.md` into your Claude skills directory:
-
-**macOS / Linux:**
 ```bash
+# Linux / macOS
 mkdir -p ~/.claude/skills/humanized-text
-cp SKILL.md ~/.claude/skills/humanized-text/SKILL.md
+curl -fsSL https://raw.githubusercontent.com/stratosjl/humanized-text-sjl/main/SKILL.md \
+  > ~/.claude/skills/humanized-text/SKILL.md
 ```
 
-**Windows (PowerShell):**
 ```powershell
+# Windows (PowerShell)
 New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.claude\skills\humanized-text"
-Copy-Item SKILL.md "$env:USERPROFILE\.claude\skills\humanized-text\SKILL.md"
+Invoke-WebRequest `
+  https://raw.githubusercontent.com/stratosjl/humanized-text-sjl/main/SKILL.md `
+  -OutFile "$env:USERPROFILE\.claude\skills\humanized-text\SKILL.md"
 ```
 
-The skill is then available in Claude Code as `humanized-text`.
+Or clone and symlink:
 
-### Activation
-
-The skill description marks itself as always-active:
-
-```
-ALWAYS active: every response or generated artefact that contains prose...
+```bash
+git clone https://github.com/stratosjl/humanized-text-sjl ~/Projects/humanized-text-sjl
+ln -sfn ~/Projects/humanized-text-sjl ~/.claude/skills/humanized-text
 ```
 
-Claude Code will invoke it automatically at session start. You can also invoke it manually in any session with the Skill tool.
+The skill auto-loads at next Claude Code session start. Verify by typing `/help` and confirming `humanized-text` appears in the skills list.
 
-### Making it a permanent default
+## How to use
 
-Add it to your global `CLAUDE.md`:
+Once installed, the skill triggers automatically on every prose-generating request. The blocking PRE-OUTPUT VERIFICATION at the top of `SKILL.md` is what makes it work: Claude scans its draft against the banned-phrases and Greek-scan-patterns lists before emitting. There are no commands to run.
 
-```markdown
-Skills in use: humanized-text
-```
+To test it: ask for a draft of anything in either language. Compare to a draft from a Claude session without the skill loaded.
 
-Or reference it in a project-level `CLAUDE.md` to enable it only for specific projects.
+## Source attribution
 
----
+The "AI catchphrases and stock phrases" subsection was adapted from the [Wikipedia WikiProject AI Cleanup AI catchphrases](https://en.wikipedia.org/wiki/Wikipedia:WikiProject_AI_Cleanup/AI_catchphrases) catalogue (CC BY-SA 4.0). The pattern list, structural-tells list, formatting-rules extensions, and citation-hygiene marker-token list draw on that page; the prose framing, plain-alternative replacements, Greek analogues, and structural-patterns section are this repo's own additions.
 
-## Customizing the Greek term list
-
-The skill references a hard-block term list for Greek financial and regulatory writing. This list covers organization-specific terminology choices and grows over time. To maintain your own version:
-
-1. Create a file at `~/.claude/skills/humanized-text/greek-term-overrides.md`
-2. List any terms you want to add or override in the same table format as the skill
-3. Reference this file in your `CLAUDE.md` as additional context
-
-The core skill deliberately keeps only the terms that are unambiguously wrong in standard Greek. Industry-specific or organization-specific choices belong in your local override file.
-
----
-
-## What it does NOT do
-
-- It does not run a linter or automated text analysis tool. All enforcement happens in Claude's reasoning process.
-- It does not translate between English and Greek.
-- It does not rewrite your existing documents automatically - it shapes new output as Claude generates it.
-- It does not cover every possible AI writing pattern. The listed rules address the most common failures; the approach is opinionated, not exhaustive.
-
----
-
-## Structure
-
-```
-humanized-text/
-├── SKILL.md          # The skill definition Claude loads
-└── README.md         # This file
-```
-
-The skill is a single Markdown file. There are no dependencies, no scripts, no build steps.
-
----
-
-## Background
-
-The English rules emerged from frustration with Claude's default tendency to pad responses with affirmations, frame everything in corporate vocabulary, and open with structure announcements rather than content. The Greek rules emerged from a more specific problem: AI-generated Greek professional text consistently makes the same five or six grammatical errors that any native speaker notices immediately but that automated spell-checkers miss entirely.
-
-Deponent verb misuse is the most frequent. A deponent verb like διαχειρίζομαι (to manage) has a passive-looking form but an active meaning. Its subject is always the agent. When AI generates "οι κεφαλαιαγορές διαχειρίζονται από την εταιρεία" (the capital markets are managed by the company), this is grammatically wrong - not just stylistically off. The correct form is "η εταιρεία διαχειρίζεται τις κεφαλαιαγορές" or "η διαχείριση των κεφαλαιαγορών ανήκει στην εταιρεία". The skill trains Claude to catch this class of error before it reaches the output.
-
----
-
-## Contributing
-
-The English rules are stable. Additions should meet a high bar: the phrase or pattern must be both common in AI output and clearly inferior to a natural alternative.
-
-The Greek rules are more open to extension. If you work with Greek professional text and encounter patterns the skill misses, open an issue with:
-
-- The error pattern (a trigger string or description)
-- Why it is wrong (grammatical rule or reference)
-- The correct alternative
-
-Corrections to the regulatory reference table (§4, gender of acronyms) are especially welcome.
-
----
+The Greek language section is original work, drawing on standard Greek grammar references (Τριανταφυλλίδης for the final-ν rule, the Νομική Υπηρεσία της Δημοκρατίας for bilateral/multilateral usage, and the linked Wikipedia and sch.gr articles for the middle dot). Each rule lists its sources inline.
 
 ## License
 
-MIT
+CC BY-SA 4.0. See [LICENSE](LICENSE).
+
+The share-alike clause is mandatory: this work incorporates content adapted from Wikipedia (CC BY-SA 4.0), so derivatives must be released under a compatible license. Permissive-license forks (MIT/Apache) are not possible without removing or fully re-authoring the AI-catchphrases subsection.
+
+## Contributing
+
+Pull requests are welcome that:
+
+- Catch new AI tells (catchphrases, structural patterns, formatting tics) with a citation if the source is a third-party catalogue like Wikipedia or a published style guide.
+- Add Greek (or other-language) rules with worked examples and at least one published source.
+- Tighten existing examples to be clearer or more general.
+
+Pull requests are not welcome that:
+
+- Add domain-specific examples (financial regulatory, medical, legal-jurisdiction-specific). The skill is intentionally general-purpose. Open a discussion if you think a domain extension belongs as a separate skill that builds on this one.
+- Soften the no-em-dash rule. It is a hard rule for a reason: em dashes are the single most reliable LLM tell in English prose.
+- Add ChatGPT or other model-specific patterns that do not also appear in Claude output. The skill is meant to be Claude-Code-installable but not Claude-specific.
+
+Maintainership is light. PRs may take days to review.
+
+## Provenance
+
+This skill was originally extracted from a personal Claude Code configuration repo and first published as `humanized-text-skill` on 2026-05-08, after an audit confirming zero corporate, PII, MNPI, or client content. Earlier versions of the file used financial-regulatory examples (MiFID, GDPR, AIFMD); those were generalized to cross-domain examples (HTML, API, ISO, W3C, GDPR, AI Act) for the public release.
+
+In the same session, a parallel development branch (`humanized-text`) was merged in. That branch extended the Greek grammar section from 10 rules to 15, adding coverage of legal/financial anglicisms (§11), calques (§12), common idiomatic errors (§13), the limits of automated checking (§14), and telegraphic noun-plus-participle constructions (§15). All financial-specific examples in those rules were generalized. The two repositories were merged into this one (`humanized-text-sjl`) under CC BY-SA 4.0.
+
+The Greek grammar rules were unchanged by both the generalization pass and the merge; only the examples and framing were updated.
