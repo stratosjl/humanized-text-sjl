@@ -1,0 +1,5 @@
+# Force LF for the Python hook script so the shebang works on Linux/macOS.
+# Markdown can stay platform-native.
+*.py text eol=lf
+*.md text
+*.sh text eol=lf
