@@ -39,6 +39,15 @@ Configuration via environment variables (all optional):
       Comma-separated list of path substrings to skip. Default:
       "/memory/,/.claude/,/.git/,/node_modules/,/Plugins/,/HANDOVER".
 
+  HUMANIZED_TEXT_ENFORCE_OVERRIDES
+      Comma-separated list of path substrings that re-enable enforcement
+      even when an EXEMPT_SEGMENTS rule would otherwise skip. Use this for
+      operator-owned plugin marketplaces under ~/.claude/plugins/ where
+      regulator-presentable CHANGELOG / README prose lives. Default covers
+      the common stratosjl-owned marketplaces; extend via env-var for your
+      own. Match is plain substring after Windows backslash normalisation,
+      so Linux/macOS/Windows paths are handled uniformly.
+
 Install: see scripts/INSTALL.md in the humanized-text-sjl repo.
 """
 from __future__ import annotations
@@ -100,6 +109,23 @@ EXEMPT_SEGMENTS = _env_list(
         "/node_modules/",
         "/Plugins/",
         "/HANDOVER",
+    ),
+)
+
+# Re-enforce overrides. Path substrings that, when present, force the hook to
+# enforce even though one of the EXEMPT_SEGMENTS would otherwise exempt the
+# file. Use this for operator-owned plugin marketplaces under ~/.claude/plugins/
+# where the operator authors regulator-presentable CHANGELOG / README prose.
+# Match is a plain substring after path normalisation (Windows backslashes
+# rewritten to forward slashes), so the same rules work on Linux, macOS, and
+# Windows. Case-sensitive by design (filesystem paths under operator control
+# are typically stable in case).
+ENFORCE_OVERRIDES = _env_list(
+    "HUMANIZED_TEXT_ENFORCE_OVERRIDES",
+    (
+        "/.claude/plugins/marketplaces/vibe-coding-rules/",
+        "/.claude/plugins/marketplaces/stratosjl-design-engineering/",
+        "/.claude/plugins/marketplaces/humanized-text-sjl/",
     ),
 )
 
@@ -236,6 +262,11 @@ def is_enforced_path(path: str) -> bool:
     p = _norm(path)
     if not p.endswith(CHECK_EXTENSIONS):
         return False
+    # Re-enforce overrides win over EXEMPT_SEGMENTS. This is how operator-
+    # owned plugin marketplaces under ~/.claude/plugins/ get enforced even
+    # though the path contains "/.claude/", which would normally exempt it.
+    if any(override in p for override in ENFORCE_OVERRIDES):
+        return True
     if any(seg in p for seg in EXEMPT_SEGMENTS):
         return False
     if not ENFORCE_ROOTS:
