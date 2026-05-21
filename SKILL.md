@@ -55,13 +55,13 @@ explicitly bans. To prevent that:
 | Foreign noun before Greek noun (`το Orders πίνακας`, `API documentation εργασία`) | Foreign modifier in head position (Rule §6) | Greek noun first: `ο πίνακας Orders`, `εργασία πάνω στο API documentation` |
 | Foreign compound modifier before Greek head (`real-time επεξεργασία`) | Same family (Rule §6 Pattern B) | Greek noun first: `επεξεργασία real-time` |
 | Brand/foreign-name without article (`από Apple`, `μέσω Google`, `μέσω BBC`) | Missing definite article (Rule §5) | `από την Apple`, `μέσω της Google`, `μέσω του BBC` |
+| `—` anywhere | Em dash banned in any language (formatting rule) | Replace with `:`, `,`, `(...)`, plain hyphen, or restructure |
+| Mixed-language compound abbreviations as bullet headers (`Sanctions / PEP screening:`) | Foreign-only header in Greek prose | Greek-first restructure: `Έλεγχος κυρώσεων και PEP (sanctions / PEP screening):` |
 | `, και` anywhere in Greek text | Anglicism (Oxford comma; banned by Rule §7) | Remove the comma: `, και` → ` και` |
 | `;` mid-sentence followed by lowercase Greek letter | English semicolon misused as άνω τελεία (Rule §8) | Replace `;` with `·` (U+0387), keep no leading space |
 | `αμφίπλευρ*` referring to two-party relations / agreements / documents | Wrong word for "bilateral" (Rule §9) | Replace with `διμερ*` (διμερής, διμερή, διμερείς) |
 | English legal or business term used as Greek prose noun | Anglicism in Greek prose (Rule §11) | Use Greek equivalent from the table in Rule §11 |
 | Greek noun/article + Greek participle/adjective with no conjugated verb (`Skill ενημερωμένο`) | Telegraphic anglicism (Rule §15) | Full Greek sentence with conjugated verb: `Το Skill ενημερώθηκε` |
-| `εκκρεμές` (αυτόνομη χρήση ως κατηγορούμενο) | Λόγια διατύπωση (Rule §16) | `σε εκκρεμότητα` (`παραμένει σε εκκρεμότητα`) |
-| `διάδρομος επικοινωνίας` | Calque (Rule §16) | `κανάλι επικοινωνίας` |
 
 ### Hard-block terms reference
 
@@ -226,7 +226,7 @@ Section and structural formulae:
 Greek analogue: «Παρά τις προκλήσεις...», «Μελλοντικές προοπτικές» as a
 default closing section reads as the same template tic.
 
-### Additional overused AI vocabulary
+### Additional overused AI vocabulary (extends the list above)
 
 Not already in the main banned-vocabulary block:
 
@@ -359,6 +359,107 @@ visual break; trust it.
 
 **Do not skip heading levels.** Never jump from `##` to `####`. Each level
 steps down by exactly one.
+
+---
+
+## Pagination and widow control
+
+These rules apply to every document that is rendered with visible pagination:
+PDF (ReportLab, weasyprint, wkhtmltopdf, LaTeX), DOCX viewed in print layout,
+and HTML print stylesheets. They are about how page breaks land on headings
+and tables. They are not about font, colour, or spacing.
+
+There are four rules, and all four are mandatory:
+
+1. **Never leave a heading alone at the end of a page** with its content
+   starting on the next page. Push the heading to the next page so it stays
+   with at least the first paragraph (or first row) it introduces. An orphan
+   heading at the bottom of a page is a reading defect: the reader has to
+   page-flip to discover what it labels.
+2. **Never leave the header row of a table alone at the end of a page** with
+   the body rows starting on the next page. Same reasoning: a header without
+   any body next to it is content-free at the place the reader's eye lands.
+   Push the header to the next page so it stays with at least one body row.
+3. **When a table breaks between pages, repeat the header row on each
+   continuation page.** A body fragment on a fresh page without column
+   labels is unreadable for any reviewer scanning the document. This is the
+   single most common pagination defect in generator-produced PDFs.
+4. **Never split a single row across two pages.** Keep all cells of one row
+   together. If a row does not fit, push the whole row to the next page
+   intact. A row whose first three cells sit on page 3 and last three cells
+   sit on page 4 cannot be read at all.
+
+These rules govern only headings and tables. They do not say anything about
+mid-paragraph breaks (which are fine) or about when a section *should*
+straddle pages (which is normal and desired). They exist because the failure
+modes they prevent are not stylistic preferences; they are functional
+breakages of the document.
+
+### How to apply, per output format
+
+**ReportLab (Python).** This is the most common stack for programmatic PDFs
+in HAM-adjacent projects.
+
+- Tables: pass `repeatRows=1` to `Table(...)` so the header row reappears on
+  every continuation page.
+- Tables: leave `splitByRow=True` (the default). Never set `splitInRow=True`
+  or override `splitByRow` to anything that allows cell-level splits.
+- Sections: set `keepWithNext=1` on the `ParagraphStyle` used for headings,
+  so a heading is never the last flowable on a page.
+- Heading-plus-first-table sequences: wrap them in
+  `KeepTogether([heading, table, ...])` so the engine pulls both to the
+  next page if the table cannot start on the current one. `KeepTogether`
+  prevents the heading-orphan-then-table case that `keepWithNext` alone
+  does not always catch when the heading is short and the table is long.
+
+**python-docx (Word output).**
+
+- Heading paragraphs: `paragraph.paragraph_format.keep_with_next = True`.
+- Body paragraphs that must not break internally:
+  `paragraph.paragraph_format.keep_together = True`.
+- Repeating table headers: there is no high-level helper. Set
+  `<w:trPr><w:tblHeader/>` on the first row of the table via lxml
+  (`row._tr.get_or_add_trPr().append(OxmlElement('w:tblHeader'))`). Word
+  honours this on every continuation page automatically.
+- Intra-row breaks: set `<w:trPr><w:cantSplit/>` on every row so Word never
+  splits a row mid-page.
+
+**HTML / CSS print stylesheets.** Use the modern `break-*` properties with
+the legacy `page-break-*` fallback:
+
+```css
+h1, h2, h3, h4, h5, h6 {
+  page-break-after: avoid;
+  break-after: avoid-page;
+}
+table thead { display: table-header-group; }   /* repeats header on print */
+tr {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+```
+
+The `display: table-header-group` rule on `thead` is what makes browsers
+repeat the header on every printed page; without it most print engines drop
+the header on continuation pages.
+
+**LaTeX.** Use `\nopagebreak` after headings, `longtable` (not `tabular`)
+with a `\endhead` clause for the repeating header row, and `\\*` instead of
+`\\` at row ends to disallow intra-row breaks. The `booktabs` package's
+documentation has the canonical pattern.
+
+### Hard failure modes that this prevents
+
+- A "Per-instrument disposals" heading on page 1 with the table starting on
+  page 2.
+- A table header `Instrument | Qty | Proceeds | Basis | Gain` on page 2,
+  body starting on page 3.
+- A table that breaks across pages 4 and 5 with no header on page 5, so the
+  reader sees a wall of unlabelled numbers.
+- A row whose long product name wraps onto a second line, with line 1 on
+  page 5 and line 2 on page 6.
+
+Each is a defect even if the totals are right.
 
 ---
 
@@ -670,17 +771,6 @@ generated for the user.** Any Greek sentence in any response must follow it.
 | Εργασία ολοκληρωμένη | Η εργασία ολοκληρώθηκε. |
 
 **Κανόνας:** Κάθε ελληνική ανακοίνωση πρέπει να έχει ρήμα. Ουσιαστικό + μετοχή/επίθετο χωρίς ρήμα αντιγράφει το αγγλικό «noun + past participle» τηλεγραφικό ύφος.
-
-### 16. Προτιμώμενες ελληνικές διατυπώσεις (Greek-to-Greek preferences)
-
-Λίστα προτιμώμενων ελληνικών όρων έναντι άλλων ελληνικών όρων που ακούγονται είτε λόγιοι είτε ξύλινοι είτε ως μεταφραστικά δάνεια. Ο κανόνας είναι αυστηρός: η αριστερή στήλη δεν χρησιμοποιείται ποτέ, εκτός και αν πρόκειται για παραπομπή σε ξένη πηγή.
-
-| Αποφεύγεται | Προτιμάται | Σημείωση |
-|---|---|---|
-| εκκρεμές | σε εκκρεμότητα | «Σημείο 1 σε εκκρεμότητα», όχι «Σημείο 1 εκκρεμές». Διατήρησε τη σωστή κλίση της φράσης («παραμένει σε εκκρεμότητα»). |
-| διάδρομος επικοινωνίας | κανάλι επικοινωνίας | Ο «διάδρομος» αποδίδει αγγλισμό (communication corridor / channel). Στα ελληνικά το αυτονόητο είναι «κανάλι επικοινωνίας». |
-
-Η λίστα επεκτείνεται σταδιακά με νέες προτιμήσεις. Στόχος: εξάλειψη εσωτερικών ασυνεπειών μεταξύ συντακτών και διατήρηση ενιαίας φωνής στα HAM παραδοτέα.
 
 ---
 
