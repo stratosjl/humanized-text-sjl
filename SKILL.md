@@ -24,22 +24,56 @@ not a language model.
 
 ## PRE-OUTPUT VERIFICATION (blocking)
 
-**Before sending any response that contains prose, and before writing any text into
-a file (including code-embedded strings such as Greek inside python-docx scripts),
-mentally scan the draft against the checklist below. Any match must be rewritten
-before output. This applies even when working at speed and even inside long
-generated documents.**
+**Every piece of prose, and every text string written into a file (including
+code-embedded strings such as Greek inside python-docx scripts), must clear TWO
+mandatory passes before output. Both passes run every single time. Clearing Pass 1
+is never sufficient on its own. This applies even when working at speed and even
+inside long generated documents.**
 
 The most common failure mode is loading this skill, treating it as reference
-material, then producing Greek prose with the same anglicism patterns the skill
-explicitly bans. To prevent that:
+material, then producing prose with the same anglicism patterns the skill
+explicitly bans, or producing mechanically-clean text that still reads as
+translated, ambiguous, or wrong in its terms of art. The two passes exist to
+catch both failure classes.
 
-1. After drafting Greek prose, read it back with the checklist in mind.
-2. Search for the trigger patterns below (literal substring or regex).
-3. Rewrite every match using the alternatives in the corresponding rule section.
-4. Then read the whole passage once more as a native speaker, not as a checklist
-   scan but as a fluency check. Ask: does this sound like it was written in Greek,
-   or translated from English?
+### Pass 1: mechanical scan (deterministic)
+
+1. Search the draft for the trigger patterns in the tables below (literal
+   substring or regex).
+2. Rewrite every match using the alternatives in the corresponding rule section.
+
+Pass 1 is the layer a tooling hook can enforce. Where a PreToolUse hook such as
+`greek_text_check.py` is installed, it blocks Write/Edit on a hard violation, so
+Pass 1 is partly automated. Treat a hook-clean result as the floor, not the goal:
+the hook only sees mechanical patterns, never meaning.
+
+### Pass 2: human read (not enforceable by any hook, so it is on you)
+
+After Pass 1 is clean, stop and read the whole passage once more deliberately, as
+a native speaker reading for the first time, not as a checklist scan. No tool can
+verify this pass happened, which is precisely why it gets skipped. Do not skip it.
+Check, at minimum:
+
+- **Fluency**: does this sound like it was written in the target language, or
+  translated from English?
+- **Antecedent clarity**: can every pronoun, article, and capitalised role term be
+  traced to one unambiguous referent? When two entities could be meant (for example
+  «η Εταιρεία» referring to the firm versus the client company), name each entity
+  explicitly instead of relying on capitalisation.
+- **Terminology**: is each term of art the one the field and the law actually use,
+  not a plausible-sounding coinage? (For example, MiFID per-se professional client
+  is «επαγγελματίας πελάτης εξ ορισμού», not «ανά κατηγορία».)
+- **Register**: titles, headings, and openings read as native, not as calques.
+
+### Mandatory self-attestation
+
+When delivering any Greek artefact, or any substantial prose deliverable a user may
+forward (email, letter, memo, policy, report, .docx, .pdf), include a short explicit
+confirmation that both passes ran, naming what Pass 2 checked. For example:
+`Dual-pass done: mechanical scan clean; human read checked antecedent clarity,
+terminology, register.` Emitting this line without having performed Pass 2 is an
+explicit false statement and a hard violation of this skill. The attestation is the
+forcing function that keeps Pass 2 from silently collapsing into Pass 1.
 
 ### Greek scan patterns (highest-frequency errors)
 
