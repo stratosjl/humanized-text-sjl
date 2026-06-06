@@ -1,0 +1,5 @@
+# PUBLIC repo — .remember/ memory/handover content is proprietary-by-default
+# and must NEVER be committed here. Protective ignore added 2026-06-07;
+# only this .gitignore itself is tracked so the protection travels.
+*
+!.gitignore
