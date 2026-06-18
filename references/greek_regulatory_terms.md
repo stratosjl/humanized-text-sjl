@@ -1,10 +1,10 @@
 ---
 name: Greek Regulatory Terms (HAM tiered banned-list)
-description: Tiered policy of English finance/regulatory terms in HAM Greek corporate documents. Hard-block terms have native Greek substitutes; technical terms are MiFID-II-anchored and may stay English. Enforced by ~/.claude/scripts/greek_text_check.py PreToolUse hook.
+description: Tiered policy of English finance/regulatory terms in Greek text across all projects (universal hook scope). Hard-block terms have native Greek substitutes; technical terms are MiFID-II-anchored and may stay English. Enforced by ~/.claude/scripts/greek_text_check.py PreToolUse hook.
 type: feedback
 originSessionId: 80258cc1-0595-461e-a383-21a26d8e20b3
 ---
-When producing HAM corporate text in Greek (memos, contracts, policies, cover notes), apply the tiered policy below. The PreToolUse hook `~/.claude/scripts/greek_text_check.py` blocks Write/Edit on `.md` / `.txt` files inside HAM/Vigor folders when hard-block terms or em/en dashes are present.
+When producing Greek text in **any** project (memos, contracts, policies, cover notes, deliverables), apply the tiered policy below. The PreToolUse hook `~/.claude/scripts/greek_text_check.py` blocks Write/Edit on **every** `.md` / `.txt` file (universal scope: all projects that produce Greek), except the exempt segments listed under "Hook behaviour", when hard-block terms or em/en dashes are present. Scope is universal by default (`ENFORCE_ROOTS` unset); it is **not** restricted to HAM/Vigor. Pure-English lines are skipped (the ≥80%-Latin citation rule), so the word-level checks target Greek text.
 
 **Why:** Multiple HAM Vigor documents produced in May 2026 contained English terms where standard Greek substitutes exist. The user flagged this as a recurring failure of the `humanized-text` skill compliance and asked for an automated, blocking enforcement. A monolithic ban proved too strict for regulatory citations and MiFID-II-anchored terminology, so the policy is tiered.
 
@@ -78,8 +78,8 @@ Greek noun first, then English identifier. The hook flags `[Latin word] [Greek n
 ## Hook behaviour
 
 - Trigger: PreToolUse on Write or Edit.
-- Path filter: `.md` or `.txt` inside an enforced root (OD-Documents, Vigor, Partnerships, Hellenic Asset Management).
-- Path exemptions: `/memory/`, `/.claude/`, `/HANDOVER`, `/feedback_greek_regulatory_terms`.
+- Path filter: **every** `.md` or `.txt`, in any project (universal; `ENFORCE_ROOTS` unset by default). Restrict to specific sub-trees only via `HUMANIZED_TEXT_ENFORCE_ROOTS` if ever needed.
+- Path exemptions (`EXEMPT_SEGMENTS`): `/memory/`, `/.claude/`, `/.git/`, `/node_modules/`, `/Plugins/`, `/HANDOVER`. Re-enforced under `~/.claude/plugins/marketplaces/` for operator-owned repos.
 - Action: stderr block with line numbers and substitutes; exit code 2 (blocking).
 - Bypass: not supported. To override, edit the file outside Claude Code or temporarily disable the hook in `~/.claude/settings.json`.
 
