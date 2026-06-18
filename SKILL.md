@@ -829,7 +829,7 @@ generated for the user.** Any Greek sentence in any response must follow it.
 
 ### 17. Νομικό γλωσσάριο EN↔EL (MiFID II, DORA, EMIR) και αντικατάσταση όρων σε SOPs
 
-Όταν γράφεις ελληνικά για ρυθμιζόμενα κείμενα (εγχειρίδια διαδικασιών/SOPs, αναφορές καταλληλότητας, πολιτικές), χρησιμοποίησε την επίσημη νομική διατύπωση του αντίστοιχου ενωσιακού κειμένου, όχι αυτοσχέδια μετάφραση ούτε τον αγγλικό όρο. Πηγή: επίσημα κείμενα EUR-Lex μέσω CELLAR content negotiation (`http://publications.europa.eu/resource/celex/<CELEX>` με `Accept: application/pdf` και `Accept-Language`), με διασταύρωση στο IATE ανά όρο. Τα όρια του 25% και τα παραδείγματα onboarding/eKYC της §16 δένουν με αυτό το γλωσσάριο.
+Όταν γράφεις ελληνικά για ρυθμιζόμενα κείμενα (εγχειρίδια διαδικασιών/SOPs, αναφορές καταλληλότητας, πολιτικές), χρησιμοποίησε την επίσημη νομική διατύπωση του αντίστοιχου ενωσιακού κειμένου, όχι αυτοσχέδια μετάφραση ούτε τον αγγλικό όρο. Πηγή: οι **ενοποιημένες εν ισχύι** εκδόσεις στο EUR-Lex (MiFID II 02014L0065-20260606, MiFIR 02014R0600-20251123, EMIR 02012R0648-20250117, DORA Καν. (ΕΕ) 2022/2554), με διασταύρωση στο IATE ανά όρο. Πάντα η ενοποιημένη έκδοση σε ισχύ, όχι το αρχικό κείμενο. Τα όρια του 25% και τα παραδείγματα onboarding/eKYC της §16 δένουν με αυτό το γλωσσάριο.
 
 **MiFID II (Οδηγία 2014/65/ΕΕ· εθνική ενσωμάτωση Ν. 4514/2018)**
 
@@ -852,6 +852,18 @@ generated for the user.** Any Greek sentence in any response must follow it.
 | costs and charges | κόστη και επιβαρύνσεις |
 | key information document (KID, PRIIPs) | έγγραφο βασικών πληροφοριών (PRIIPs) |
 
+**MiFIR (Κανονισμός (ΕΕ) 600/2014· ενοποιημένο 02014R0600-20251123)**
+
+| EN | EL |
+|---|---|
+| systematic internaliser | συστηματικός εσωτερικοποιητής |
+| organised trading facility (OTF) | μηχανισμός οργανωμένης διαπραγμάτευσης |
+| multilateral trading facility (MTF) | πολυμερής μηχανισμός διαπραγμάτευσης |
+| consolidated tape | ενοποιημένο δελτίο συναλλαγών |
+| transaction reporting | γνωστοποίηση συναλλαγών |
+| trading obligation | υποχρέωση διαπραγμάτευσης |
+| payment for order flow (PFOF) | πληρωμή για τη ροή εντολών |
+
 **DORA (Κανονισμός (ΕΕ) 2022/2554)**
 
 | EN | EL |
@@ -865,7 +877,7 @@ generated for the user.** Any Greek sentence in any response must follow it.
 | ICT risk management framework | πλαίσιο διαχείρισης κινδύνου ΤΠΕ |
 | threat-led penetration testing (TLPT) | δοκιμές διείσδυσης βάσει απειλών |
 
-**EMIR (Κανονισμός (ΕΕ) 648/2012)** — όροι από καθιερωμένη χρήση· το επίσημο PDF δεν ήταν διαθέσιμο μέσω CELLAR κατά τη σύνταξη, προς διασταύρωση.
+**EMIR (Κανονισμός (ΕΕ) 648/2012· ενοποιημένο 02012R0648-20250117)**
 
 | EN | EL |
 |---|---|
