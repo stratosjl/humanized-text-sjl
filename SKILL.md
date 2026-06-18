@@ -1,6 +1,6 @@
 ---
 name: humanized-text
-version: 1.1.1
+version: 1.2.0
 description: >
   Apply a natural, human writing style to ALL written output, in any language.
   ALWAYS active: every response or generated artefact that contains prose, in
@@ -366,6 +366,8 @@ Use one of these instead, depending on context:
 - a plain hyphen (-) for compound adjectives
 - commas to enclose a parenthetical clause
 - parentheses () for asides
+
+**No space before punctuation.** Never put a space before `.` `,` `:` `;` `!` `?` `·` `»` `…`. The space follows the punctuation mark, never precedes it (`λέξη.` not `λέξη .`; `παράδειγμα:` not `παράδειγμα :`). Same for the opening Greek guillemet: write `«λέξη»`, not `« λέξη »`.
 
 Do not use unnecessary quotation marks around ordinary words.
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0 (2026-06-18)
+
+New formatting rule, hook-enforced: **no space before punctuation**. `greek_text_check.py` now hard-blocks a space before `. , : ; ! ? · » …` and a space after the opening guillemet `«`. Documented in SKILL.md under Formatting Rules.
+
 ## 1.1.1 (2026-06-18)
 
 Documentation: clarify that the `greek_text_check.py` hook scope is **universal** (every `.md`/`.txt` in any project that produces Greek, minus `EXEMPT_SEGMENTS`), not restricted to HAM/Vigor. No code change: `ENFORCE_ROOTS` already defaults to empty (universal); the prior "Vigor-only" wording in `references/greek_regulatory_terms.md` was stale. Verified by a standalone scan on a non-Vigor path (em dash + «σκληρός φραγμός» both blocked, exit 2).

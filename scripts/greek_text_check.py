@@ -85,6 +85,10 @@ COMMA_KAI_RE = re.compile(r",\s+και\b")
 # Pattern: ";" followed by space and a lowercase Greek letter — almost
 # certainly an English-style semicolon misused as άνω τελεία (Rule §8).
 INNER_SEMICOLON_RE = re.compile(r";\s+[α-ωάέήίόύώ]")
+# Space before punctuation: "λέξη ." -> "λέξη." The space follows the mark.
+SPACE_BEFORE_PUNCT_RE = re.compile(r"(?<=\S)[ \t]+[.,;:!?·»…]")
+# Space after the opening guillemet: "« λέξη" -> "«λέξη".
+SPACE_AFTER_GUILLEMET_RE = re.compile(r"«[ \t]")
 
 
 def _env_list(name: str, default: tuple[str, ...]) -> tuple[str, ...]:
@@ -380,6 +384,20 @@ def find_violations(text: str) -> list[dict]:
 
         scan = _strip_inline_code(raw_line)
         scan_unparen = _strip_parentheses(scan)
+
+        # Space before punctuation / after the opening guillemet (formatting).
+        if SPACE_BEFORE_PUNCT_RE.search(scan):
+            issues.append(
+                {"line": i, "kind": "space_before_punct", "severity": "hard",
+                 "msg": "κενό πριν σημείο στίξης -> κόλλησέ το στη λέξη (π.χ. «λέξη .» -> «λέξη.»)",
+                 "snip": raw_line.strip()}
+            )
+        if SPACE_AFTER_GUILLEMET_RE.search(scan):
+            issues.append(
+                {"line": i, "kind": "space_after_guillemet", "severity": "hard",
+                 "msg": "κενό μετά το « -> «λέξη», όχι « λέξη»",
+                 "snip": raw_line.strip()}
+            )
 
         # Hard-block English terms (case-insensitive, Latin word boundary).
         for term, sub in HARD_BLOCK.items():
