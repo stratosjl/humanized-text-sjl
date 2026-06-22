@@ -1,10 +1,18 @@
-# greek_text_check.py — install guide
+# greek_text_check.py: install guide
 
 This PreToolUse hook enforces the humanized-text-sjl Greek-text rules at write time. When Claude Code attempts a `Write` or `Edit` on a `.md` / `.txt` file and the new content contains em dashes, comma+`και`, English-style inner semicolons, hard-block English terms, or Greek-to-Greek violations (Rule §16), the hook returns exit code 2 and Claude must fix the issues before the write goes through.
 
 Requirements: Python 3.10+ on PATH. No external dependencies. The script is pure stdlib.
 
-## Linux / macOS
+## Quick install (Linux / macOS)
+
+```bash
+bash scripts/install_hook.sh
+```
+
+This performs the steps below idempotently (symlink the script, merge the `PreToolUse` hook into `settings.json`, smoke-test) and is safe to re-run. The manual steps stay documented for reference and for Windows.
+
+## Linux / macOS (manual)
 
 ```bash
 # 1. Copy the script into your Claude Code config dir.

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.0 (2026-06-22)
+
+Add `scripts/install_hook.sh`: an idempotent, one-command installer that symlinks `greek_text_check.py` into `~/.claude/scripts/` and merges the `PreToolUse(Write|Edit)` hook into `~/.claude/settings.json` (preserving every other key), then smoke-tests it. Motivated by a real miss: on a Linux machine the hook was documented but never wired, so the deterministic Pass-1 check never ran and em/en dashes shipped unblocked in English and Greek drafts. INSTALL.md now points at the installer as the default path. Also fixed an em dash in the INSTALL.md title (the repo must obey its own rule).
+
 ## 1.2.0 (2026-06-18)
 
 New formatting rule, hook-enforced: **no space before punctuation**. `greek_text_check.py` now hard-blocks a space before `. , : ; ! ? · » …` and a space after the opening guillemet `«`. Documented in SKILL.md under Formatting Rules.
