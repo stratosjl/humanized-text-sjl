@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.1 (2026-06-30)
+
+Hardened the `ENFORCE_ROOTS` comment against a real regression. A User-scope `HUMANIZED_TEXT_ENFORCE_ROOTS` env var had silently scoped enforcement to a few firm folders, so English deliverables in other projects bypassed the deterministic Pass-1 hook and shipped with em and en dashes. The env var has been removed (machine config), and the comment above `ENFORCE_ROOTS` now states the rule is universal and that no roots may be added: any value restricts the hook to matching paths and silently exempts everything else. Also genericised the documentation, removing firm-specific project names from CHANGELOG, SKILL.md and `references/greek_regulatory_terms.md` so the public skill carries no specific firm reference.
+
 ## 1.3.0 (2026-06-22)
 
 Add `scripts/install_hook.sh`: an idempotent, one-command installer that symlinks `greek_text_check.py` into `~/.claude/scripts/` and merges the `PreToolUse(Write|Edit)` hook into `~/.claude/settings.json` (preserving every other key), then smoke-tests it. Motivated by a real miss: on a Linux machine the hook was documented but never wired, so the deterministic Pass-1 check never ran and em/en dashes shipped unblocked in English and Greek drafts. INSTALL.md now points at the installer as the default path. Also fixed an em dash in the INSTALL.md title (the repo must obey its own rule).
