@@ -1,12 +1,12 @@
 ---
-name: Greek Regulatory Terms (HAM tiered banned-list)
+name: Greek Regulatory Terms (tiered banned-list)
 description: Tiered policy of English finance/regulatory terms in Greek text across all projects (universal hook scope). Hard-block terms have native Greek substitutes; technical terms are MiFID-II-anchored and may stay English. Enforced by ~/.claude/scripts/greek_text_check.py PreToolUse hook.
 type: feedback
 originSessionId: 80258cc1-0595-461e-a383-21a26d8e20b3
 ---
-When producing Greek text in **any** project (memos, contracts, policies, cover notes, deliverables), apply the tiered policy below. The PreToolUse hook `~/.claude/scripts/greek_text_check.py` blocks Write/Edit on **every** `.md` / `.txt` file (universal scope: all projects that produce Greek), except the exempt segments listed under "Hook behaviour", when hard-block terms or em/en dashes are present. Scope is universal by default (`ENFORCE_ROOTS` unset); it is **not** restricted to HAM/Vigor. Pure-English lines are skipped (the ≥80%-Latin citation rule), so the word-level checks target Greek text.
+When producing Greek text in **any** project (memos, contracts, policies, cover notes, deliverables), apply the tiered policy below. The PreToolUse hook `~/.claude/scripts/greek_text_check.py` blocks Write/Edit on **every** `.md` / `.txt` file (universal scope: all projects that produce Greek), except the exempt segments listed under "Hook behaviour", when hard-block terms or em/en dashes are present. Scope is universal by default (`ENFORCE_ROOTS` unset); it is **not** restricted to specific projects. Pure-English lines are skipped (the ≥80%-Latin citation rule), so the word-level checks target Greek text.
 
-**Why:** Multiple HAM Vigor documents produced in May 2026 contained English terms where standard Greek substitutes exist. The user flagged this as a recurring failure of the `humanized-text` skill compliance and asked for an automated, blocking enforcement. A monolithic ban proved too strict for regulatory citations and MiFID-II-anchored terminology, so the policy is tiered.
+**Why:** Multiple regulated-firm documents produced in May 2026 contained English terms where standard Greek substitutes exist. The user flagged this as a recurring failure of the `humanized-text` skill compliance and asked for an automated, blocking enforcement. A monolithic ban proved too strict for regulatory citations and MiFID-II-anchored terminology, so the policy is tiered.
 
 **How to apply:**
 
@@ -40,7 +40,7 @@ When producing Greek text in **any** project (memos, contracts, policies, cover 
 | trigger | ενεργοποίηση |
 | carve-out / carveout | εξαίρεση |
 
-## Technical terms allowed in HAM Greek prose
+## Technical terms allowed in regulated Greek prose
 
 These are MiFID II / DORA / EBA / FINMA-anchored and may stay English. Use Greek + parenthesis when introducing them, then English alone for repeated mentions if natural.
 
@@ -70,7 +70,7 @@ Greek noun first, then English identifier. The hook flags `[Latin word] [Greek n
 
 | Wrong | Right |
 |---|---|
-| Vigor consent | συναίνεση της Vigor |
+| Acme consent | συναίνεση της Acme |
 | MiFID II σύμβουλος | σύμβουλος MiFID II |
 | substance KPI | δείκτης ουσίας KPI |
 | pilot scope | εύρος του pilot |
@@ -89,4 +89,4 @@ When new banned or allowed terms are identified, update both:
 - `HARD_BLOCK` / `TECH_ALLOWED` in `~/.claude/scripts/greek_text_check.py`
 - the tables in this memory file
 
-and mirror this file to the Vigor project memory folder.
+and mirror this file to the relevant project memory folder.

@@ -10,11 +10,11 @@ New formatting rule, hook-enforced: **no space before punctuation**. `greek_text
 
 ## 1.1.1 (2026-06-18)
 
-Documentation: clarify that the `greek_text_check.py` hook scope is **universal** (every `.md`/`.txt` in any project that produces Greek, minus `EXEMPT_SEGMENTS`), not restricted to HAM/Vigor. No code change: `ENFORCE_ROOTS` already defaults to empty (universal); the prior "Vigor-only" wording in `references/greek_regulatory_terms.md` was stale. Verified by a standalone scan on a non-Vigor path (em dash + «σκληρός φραγμός» both blocked, exit 2).
+Documentation: clarify that the `greek_text_check.py` hook scope is **universal** (every `.md`/`.txt` in any project that produces Greek, minus `EXEMPT_SEGMENTS`), not restricted to specific projects. No code change: `ENFORCE_ROOTS` already defaults to empty (universal); the prior "project-restricted" wording in `references/greek_regulatory_terms.md` was stale. Verified by a standalone scan on an unrelated-project path (em dash + «σκληρός φραγμός» both blocked, exit 2).
 
 ## 1.1.0 (2026-06-18)
 
-Added the §16/§17 Greek terminology work from the HAM regulatory sessions.
+Added the §16/§17 Greek terminology work from regulatory compliance sessions.
 
 - §16: new Greek-to-Greek preferences with context nuance:
   - `σκληρός φραγμός` → `υποχρεωτικός αποκλεισμός` (calque of "hard stop"). `ανυπέρβλητο κώλυμα` and `συστημικός περιορισμός` remain valid in proper legal/technical context.

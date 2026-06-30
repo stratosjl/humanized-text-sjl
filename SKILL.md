@@ -439,7 +439,7 @@ breakages of the document.
 ### How to apply, per output format
 
 **ReportLab (Python).** This is the most common stack for programmatic PDFs
-in HAM-adjacent projects.
+in regulated-firm projects.
 
 - Tables: pass `repeatRows=1` to `Table(...)` so the header row reappears on
   every continuation page.
