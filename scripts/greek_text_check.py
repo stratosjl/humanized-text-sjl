@@ -99,9 +99,14 @@ def _env_list(name: str, default: tuple[str, ...]) -> tuple[str, ...]:
     return parts
 
 
-# By default the hook enforces on EVERY .md/.txt write that is not in an
-# exempt segment. Set HUMANIZED_TEXT_ENFORCE_ROOTS to restrict to specific
-# project sub-trees (e.g. team or client folders).
+# The humanized-text rule is UNIVERSAL: it applies to every deliverable, every
+# app, and all human-facing text, in EVERY project. Enforcement must stay
+# global, so this MUST remain empty. Do NOT set the HUMANIZED_TEXT_ENFORCE_ROOTS
+# env var and do NOT add any roots here. Any value restricts the hook to the
+# matching paths and silently exempts everything else (exactly how English
+# deliverables under ~/Projects bypassed the hook until it was removed on
+# 2026-06-30). Empty => ENFORCE_ROOTS == () == enforce everywhere not in
+# EXEMPT_SEGMENTS.
 ENFORCE_ROOTS = _env_list("HUMANIZED_TEXT_ENFORCE_ROOTS", ())
 
 EXEMPT_SEGMENTS = _env_list(
