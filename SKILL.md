@@ -161,6 +161,20 @@ Do not explain what you are about to do. Just do it.
 
 ---
 
+## Calibrating to the operator's finalised versions
+
+When the operator finalises a text you drafted, above all when he hands you the version he actually sent (an email, a letter, a memo), read it and compare it against your draft. The point is not to file it away: study what he changed and treat those edits as corrections to your model of how he writes, then move later drafts toward that voice.
+
+Concretely:
+- Accept, or ask for, the sent or final version whenever one exists.
+- Diff it against your draft and identify each deliberate change; ignore pure typo fixes.
+- Note the recurring patterns: the words he prefers, the length, the register, what he cuts as unnecessary. Apply them going forward.
+- Where a change reveals a general rule (a term, a Greek usage, a structural preference), fold it into this skill or into memory so it persists beyond the current session.
+
+His finalised version is the ground truth for his voice, above any generic guidance in this file. This is a standing feedback loop, not a one-off.
+
+---
+
 ## Banned Phrases and Words
 
 ### Assistant filler phrases
