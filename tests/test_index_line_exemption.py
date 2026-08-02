@@ -74,7 +74,7 @@ def test_index_line_variants_pass():
 
 def test_index_line_inside_a_larger_file_passes():
     text = "\n".join([
-        "# deskmeet-setup memory index",
+        "# project memory index",
         "",
         f"- [First entry](first.md) {EM} what the first entry is about",
         f"- [Second entry](second.md) {EM} what the second entry is about",

@@ -52,6 +52,12 @@ dictated by the harness, not by you, so the hook lets it through. Everything els
 on such a line is still checked, a hook containing a second dash is still blocked,
 and ordinary prose using the same character is still blocked.
 
+The exemption is scoped by LINE SHAPE, not by filename, and that is deliberate. The
+case that forced it was a handover document quoting the index format, not an index
+file: memory directories are already skipped wholesale by `EXEMPT_SEGMENTS`, so a
+filename-scoped exemption would not have solved anything. Any file may therefore
+carry a compliant index line. No file may carry the character anywhere else.
+
 **2. Both verification passes run every time.** See below. Clearing Pass 1 alone is
 never sufficient.
 
