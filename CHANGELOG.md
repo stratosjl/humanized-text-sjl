@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.1.0 (2026-08-03)
+
+(Numbering note: the SKILL.md `version` field moved to 2.0.0 with the SKILL + references split, which never got its own entry here. This entry follows that field, so 1.4.0 above is the last entry under the old numbering.)
+
+One narrow exemption to the dash rule, plus the repo's first test suite. The no-dash rule went global on 2026-08-03, and it collided with the one shape that cannot comply: the harness's own memory-index entry, written as a markdown list item made of a link, a separator dash, and a one-line hook (`- [title](file.md) SEPARATOR hook text`). That format is specified by the harness, not by this skill, so every write of a compliant index file was being blocked with no way to fix the text. `greek_text_check.py` now exempts that line shape from the em/en-dash check only.
+
+The exemption is deliberately hard to abuse. It requires a list bullet, a single markdown link with no spaces in the target, the separator, and a hook of at most 200 characters that contains no further dash of its own. A bullet of ordinary prose, a link with no bullet, a hook with a second dash, an empty or overlong hook, and any prose line whatsoever still block exactly as before, and every other rule (Oxford comma before «και», semicolon misuse, spacing, banned terms) still runs on the exempt line.
+
+New `tests/test_index_line_exemption.py`, 14 cases, runnable under pytest or standalone. It pins both halves: an index line passes, and prose using the same character still fails. Verified additionally against a live memory index, which now scans clean.
+
 ## 1.4.0 (2026-07-16)
 
 New Greek rule §18: **ordinals, not cardinals, for enumerated items in a series.** A post-nominal cardinal ("Ροή 2", "Κανόνας 3") reads as "Ροή δύο" and is an anglicism; Greek uses the ordinal ("Ροή 2η", "δεύτερη ροή"), the same pattern behind the weekday names Δευτέρα/Τρίτη/Τετάρτη/Πέμπτη. The carve-out is written into the rule: standardised citation and identifier numbers stay cardinal ("άρθρο 27", "παρ. 1", "ΦΕΚ Β΄ 235", "ν. 5144/2024", decision and version numbers), as does Arabic-numeral outline section numbering ("1. Θέμα"). Added a matching row to the Greek scan-patterns table. Deliberately NOT wired into the deterministic hook: a broad "noun + digit" regex would false-positive on the many legitimate cardinal citations, so §18 is a Pass-2 (native-reader) rule with Pass-1 scan guidance only. Prompted by a native-speaker correction and a live case (an RM memo that mixed "Ροή 1η" with "Ροή 2" / "Ροή 3").

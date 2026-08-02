@@ -6,7 +6,8 @@ greek_text_check.py — PreToolUse hook for Claude Code (Linux / macOS / Windows
 Blocks Write/Edit operations on .md / .txt files when the inserted text
 contains:
 
-  1. em dashes (U+2014) or en dashes (U+2013)
+  1. em dashes (U+2014) or en dashes (U+2013), with one narrow exemption for
+     the harness-dictated memory-index line (see MEMORY_INDEX_LINE_RE)
   2. Greek "Oxford comma" before "και"  (Rule §7 of humanized-text-sjl)
   3. English semicolon used as άνω τελεία (Rule §8)
   4. Hard-block English terms that have a Greek substitute
@@ -78,6 +79,30 @@ except Exception:
 
 EM_DASH = "—"
 EN_DASH = "–"
+
+# ---------------------------------------------------------------------------
+# Memory-index line exemption (I-10, 2026-08-03)
+#
+# The operator's no-dash rule went global on 2026-08-03. The harness's own
+# memory-index format is the one place the dash cannot be removed: an index
+# entry is a markdown list item written as a link, a separator dash, and a
+# one-line hook. That shape is specified by the harness, not by this project,
+# so a write of a compliant index file would otherwise be blocked forever.
+#
+# The exemption is deliberately narrow. It covers ONE line shape and nothing
+# else: a list item whose visible content is a single markdown link, one
+# separator dash, and a short hook that carries no further dash of its own.
+# Prose is never exempt, and the dash is never exempt anywhere else on the
+# line. Everything after the separator is still scanned by every other rule.
+# ---------------------------------------------------------------------------
+INDEX_HOOK_MAX_CHARS = 200
+MEMORY_INDEX_LINE_RE = re.compile(
+    r"^\s{0,8}[-*+]\s+"          # markdown list bullet, optionally indented
+    r"\[[^\]\n]+\]"              # link text
+    r"\([^()\s]+\)"              # link target, no spaces, no nesting
+    r"\s*[—–]\s*"                # the separator the harness format mandates
+    r"(?P<hook>\S.*)$"           # the one-line hook
+)
 
 # Pattern: ", και" — Oxford comma in Greek, banned by humanized-text Rule §7.
 COMMA_KAI_RE = re.compile(r",\s+και\b")
@@ -321,6 +346,23 @@ def _is_citation_line(line: str) -> bool:
     return False
 
 
+def is_memory_index_line(line: str) -> bool:
+    """True for a memory-index entry, which is exempt from the dash rule only.
+
+    Shape: `- [title](target.md) SEPARATOR hook text`. Anything else, prose
+    included, returns False. A hook that itself contains a dash also returns
+    False, so the exemption can never cover more than the one separator the
+    harness format requires.
+    """
+    match = MEMORY_INDEX_LINE_RE.match(line.rstrip())
+    if not match:
+        return False
+    hook = match.group("hook").strip()
+    if not hook or len(hook) > INDEX_HOOK_MAX_CHARS:
+        return False
+    return EM_DASH not in hook and EN_DASH not in hook
+
+
 def _strip_code_fences(text: str) -> str:
     out_lines = []
     in_fence = False
@@ -359,13 +401,16 @@ def find_violations(text: str) -> list[dict]:
     issues: list[dict] = []
     text = _strip_code_fences(text)
     for i, raw_line in enumerate(text.splitlines(), start=1):
-        # Em / en dashes are checked even in citation lines (banned everywhere).
-        if EM_DASH in raw_line:
+        # Em / en dashes are checked even in citation lines (banned
+        # everywhere), with exactly one exemption: a memory-index entry,
+        # whose separator is dictated by the harness format (I-10).
+        index_line = is_memory_index_line(raw_line)
+        if EM_DASH in raw_line and not index_line:
             issues.append(
                 {"line": i, "kind": "em_dash", "severity": "hard",
                  "msg": "em dash (—)", "snip": raw_line.strip()}
             )
-        if EN_DASH in raw_line:
+        if EN_DASH in raw_line and not index_line:
             issues.append(
                 {"line": i, "kind": "en_dash", "severity": "hard",
                  "msg": "en dash (–)", "snip": raw_line.strip()}

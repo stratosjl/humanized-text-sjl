@@ -1,6 +1,6 @@
 ---
 name: humanized-text
-version: 2.0.0
+version: 2.1.0
 description: >
   Apply a natural, human writing style to ALL written output, in any language.
   ALWAYS active: every response or generated artefact that contains prose, in
@@ -44,6 +44,13 @@ colon to introduce or expand, a plain hyphen for compound adjectives, commas for
 parenthetical clause, or parentheses for an aside. Where the `greek_text_check.py`
 PreToolUse hook is installed it blocks Write and Edit on any dash hit regardless of
 the file's language, which is correct and deliberate.
+
+There is exactly one exemption, and you do not get to widen it: a memory-index
+entry, meaning a markdown list item written as a link, a separator dash, and a
+short one-line hook (`- [title](file.md) SEPARATOR hook text`). That shape is
+dictated by the harness, not by you, so the hook lets it through. Everything else
+on such a line is still checked, a hook containing a second dash is still blocked,
+and ordinary prose using the same character is still blocked.
 
 **2. Both verification passes run every time.** See below. Clearing Pass 1 alone is
 never sufficient.

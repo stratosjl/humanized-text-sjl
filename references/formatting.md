@@ -5,7 +5,9 @@ artefact: markdown with headings, .docx, .pdf, HTML, or LaTeX.
 
 ## Formatting Rules
 
-**No em dashes or en dashes, ever.** This is a hard rule with no exceptions.
+**No em dashes or en dashes, ever.** This is a hard rule with one narrow exemption,
+the harness-dictated memory-index line (`- [title](file.md) SEPARATOR hook text`);
+see the hard-rules section of SKILL.md.
 Use one of these instead, depending on context:
 - a colon (:) to introduce or expand
 - a plain hyphen (-) for compound adjectives
