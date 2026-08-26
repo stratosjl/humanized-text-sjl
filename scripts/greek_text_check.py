@@ -57,6 +57,7 @@ import io
 import json
 import os
 import re
+import subprocess
 import sys
 import time
 
@@ -611,6 +612,50 @@ def _recent_prose(root: str, now: float) -> list:
     return found
 
 
+def _changed_lines(path: str):
+    """-> the set of line numbers this working tree ADDED, or None if unknown.
+
+    A whole-file scan on a long-lived document reports every historical
+    violation every time the file is touched. Measured on a 2,600-line issue log:
+    one clean append reported twelve pre-existing findings elsewhere in the file
+    and none in the new text. A guard that reports a wall of old violations on
+    every write is one that gets switched off, which is the failure mode
+    `guards-and-negative-tests.md` item 12 describes, so the scope has to be the
+    change and not the file.
+
+    None means "could not tell", and the caller then reports everything and says
+    so, because a narrower report that cannot justify itself is worse than a
+    noisy one.
+    """
+    directory = os.path.dirname(os.path.abspath(path)) or "."
+    try:
+        tracked = subprocess.run(
+            ["git", "-C", directory, "ls-files", "--error-unmatch", path],
+            capture_output=True, timeout=5)
+        if tracked.returncode != 0:
+            return None  # untracked: everything in it is new, report it all
+        diff = subprocess.run(
+            ["git", "-C", directory, "diff", "-U0", "HEAD", "--", path],
+            capture_output=True, text=True, timeout=10)
+        if diff.returncode != 0:
+            return None
+    except (OSError, subprocess.SubprocessError):
+        return None
+    changed = set()
+    for line in diff.stdout.splitlines():
+        if not line.startswith("@@"):
+            continue
+        try:
+            plus = line.split("+", 1)[1].split(" ", 1)[0]
+            start, _, count = plus.partition(",")
+            start_i = int(start)
+            count_i = int(count) if count else 1
+        except (IndexError, ValueError):
+            return None
+        changed.update(range(start_i, start_i + count_i))
+    return changed
+
+
 def _post_bash_scan(payload: dict) -> int:
     """Report hard violations in prose files a Bash call has just changed."""
     root = payload.get("cwd") or os.getcwd()
@@ -622,16 +667,23 @@ def _post_bash_scan(payload: dict) -> int:
         except (OSError, UnicodeDecodeError):
             continue
         hard = [v for v in find_violations(content) if v.get("severity") == "hard"]
-        if hard:
-            flagged.append((path, hard))
+        if not hard:
+            continue
+        changed = _changed_lines(path)
+        if changed is not None:
+            hard = [v for v in hard if v.get("line") in changed]
+            if not hard:
+                continue
+        flagged.append((path, hard, changed is None))
     if not flagged:
         return 0
     sys.stderr.write(
         "greek_text_check (post-Bash): hard violations in prose written OUTSIDE "
         "the Write/Edit tools, which the PreToolUse hook cannot see:\n"
     )
-    for path, hard in flagged[:10]:
-        sys.stderr.write(f"  {path}\n")
+    for path, hard, whole_file in flagged[:10]:
+        scope = " (whole file; could not scope to the change)" if whole_file else ""
+        sys.stderr.write(f"  {path}{scope}\n")
         for v in hard[:12]:
             sys.stderr.write(f"    line {v['line']:>4} [{v['kind']}]: {v['msg']}\n")
     sys.stderr.write("\nFix these before continuing.\n")
