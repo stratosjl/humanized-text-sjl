@@ -58,6 +58,7 @@ import json
 import os
 import re
 import sys
+import time
 
 # ---------------------------------------------------------------------------
 # Force UTF-8 on stdin/stdout/stderr. Critical on Windows (cp1252 default
@@ -550,7 +551,97 @@ def _standalone_scan(target: str) -> int:
     return 2 if hard else 0
 
 
+# --------------------------------------------------------------- post-Bash mode
+# A PreToolUse hook fires on a TOOL CALL, so it sees Write and Edit and nothing
+# else. Every file produced by a shell heredoc, a generator or a build step is
+# invisible to it. Measured in a working session: the hook blocked two writes
+# while the great majority of that session's prose went through heredocs and was
+# never inspected, which made the guard feel present while most of the output
+# bypassed it. Previous green results then train the writer to trust the path.
+#
+# This mode is the destination-based half. Wired as a PostToolUse hook on Bash,
+# it inspects the files that call actually changed, whatever wrote them. It
+# cannot block, because the write has already happened, so it reports and exits
+# non-zero to surface the finding.
+POST_BASH_WINDOW_SEC = float(os.environ.get("GREEK_CHECK_BASH_WINDOW", "25"))
+POST_BASH_MAX_FILES = int(os.environ.get("GREEK_CHECK_BASH_MAX_FILES", "40"))
+POST_BASH_MAX_DEPTH = int(os.environ.get("GREEK_CHECK_BASH_MAX_DEPTH", "5"))
+
+# Directories a bounded walk must not descend into: large, generated, or both.
+# `.git` above all, which dwarfs every repo it sits in.
+_WALK_SKIP = frozenset({
+    ".git", "node_modules", ".venv", "venv", "__pycache__", ".next", "dist",
+    ".cache", ".pnpm-store", ".turbo", "target", "build", ".mypy_cache",
+    ".pytest_cache", ".ruff_cache", "site-packages",
+})
+
+
+def _recent_prose(root: str, now: float) -> list:
+    """-> prose files under `root` whose mtime is inside the window.
+
+    Bounded three ways (depth, file count, skip list) because this runs after
+    EVERY Bash call and a walk that is merely usually fast is not good enough.
+    mtime is the filter rather than any parsing of the command: a heredoc, a
+    redirection, a generator and a build step all move an mtime, and none of
+    them can be recognised reliably from a command string.
+    """
+    found = []
+    stack = [(os.path.abspath(root), 0)]
+    while stack and len(found) < POST_BASH_MAX_FILES:
+        directory, depth = stack.pop()
+        try:
+            entries = list(os.scandir(directory))
+        except OSError:
+            continue
+        for entry in entries:
+            try:
+                if entry.is_dir(follow_symlinks=False):
+                    if depth < POST_BASH_MAX_DEPTH and entry.name not in _WALK_SKIP:
+                        stack.append((entry.path, depth + 1))
+                    continue
+                if not entry.is_file(follow_symlinks=False):
+                    continue
+                if now - entry.stat().st_mtime > POST_BASH_WINDOW_SEC:
+                    continue
+                if not is_enforced_path(entry.path):
+                    continue
+                found.append(entry.path)
+            except OSError:
+                continue
+    return found
+
+
+def _post_bash_scan(payload: dict) -> int:
+    """Report hard violations in prose files a Bash call has just changed."""
+    root = payload.get("cwd") or os.getcwd()
+    flagged = []
+    for path in _recent_prose(root, time.time()):
+        try:
+            with open(path, encoding="utf-8") as handle:
+                content = handle.read()
+        except (OSError, UnicodeDecodeError):
+            continue
+        hard = [v for v in find_violations(content) if v.get("severity") == "hard"]
+        if hard:
+            flagged.append((path, hard))
+    if not flagged:
+        return 0
+    sys.stderr.write(
+        "greek_text_check (post-Bash): hard violations in prose written OUTSIDE "
+        "the Write/Edit tools, which the PreToolUse hook cannot see:\n"
+    )
+    for path, hard in flagged[:10]:
+        sys.stderr.write(f"  {path}\n")
+        for v in hard[:12]:
+            sys.stderr.write(f"    line {v['line']:>4} [{v['kind']}]: {v['msg']}\n")
+    sys.stderr.write("\nFix these before continuing.\n")
+    return 2
+
+
 def main() -> int:
+    if len(sys.argv) >= 2 and sys.argv[1] == "--post-bash":
+        return _post_bash_scan(_read_payload() or {})
+
     if len(sys.argv) >= 2 and sys.argv[1] == "--standalone":
         if len(sys.argv) < 3:
             print("usage: greek_text_check.py --standalone <file>", file=sys.stderr)
