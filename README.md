@@ -77,3 +77,7 @@ This skill was originally extracted from a personal Claude Code configuration re
 In the same session, a parallel development branch (`humanized-text`) was merged in. That branch extended the Greek grammar section from 10 rules to 15, adding coverage of legal/financial anglicisms (§11), calques (§12), common idiomatic errors (§13), the limits of automated checking (§14), and telegraphic noun-plus-participle constructions (§15). All financial-specific examples in those rules were generalized. The two repositories were merged into this one (`humanized-text-sjl`) under CC BY-SA 4.0.
 
 The Greek grammar rules were unchanged by both the generalization pass and the merge; only the examples and framing were updated.
+
+## Hook coverage
+
+The Greek-text check runs as a PreToolUse hook, so it inspects tool calls rather than files: anything written through a shell heredoc or a generator bypasses it. See [docs/hook-coverage.md](docs/hook-coverage.md) for what that means and the three ways to close it.
