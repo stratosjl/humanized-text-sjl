@@ -19,6 +19,7 @@ contains Greek. Rule numbers reference `references/greek-rules.md`.
 | Brand/foreign-name without article (`από Apple`, `μέσω Google`, `μέσω BBC`) | Missing definite article (Rule §5) | `από την Apple`, `μέσω της Google`, `μέσω του BBC` |
 | `—` anywhere | Em dash banned in any language (formatting rule) | Replace with `:`, `,`, `(...)`, plain hyphen, or restructure |
 | Mixed-language compound abbreviations as bullet headers (`Sanctions / PEP screening:`) | Foreign-only header in Greek prose | Greek-first restructure: `Έλεγχος κυρώσεων και PEP (sanctions / PEP screening):` |
+| `!».` or `;».` (terminal punctuation inside the quotes AND a full stop after) | Double terminal punctuation (Rule §20.3) | Drop the outer full stop: `«...!».` becomes `«...!»` |
 | `, και` anywhere in Greek text | Anglicism (Oxford comma; banned by Rule §7) | Remove the comma: `, και` → ` και` |
 | `;` mid-sentence followed by lowercase Greek letter | English semicolon misused as άνω τελεία (Rule §8) | Replace `;` with `·` (U+0387), keep no leading space |
 | `αμφίπλευρ*` referring to two-party relations / agreements / documents | Wrong word for "bilateral" (Rule §9) | Replace with `διμερ*` (διμερής, διμερή, διμερείς) |

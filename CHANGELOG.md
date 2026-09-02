@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.2.0 (2026-09-02)
+
+Rule §20, punctuation with quotation marks, contributed by the operator.
+
+Greek does not follow the American convention of putting the full stop inside the quotes. The position of the mark shows who owns it, the quotation or the main clause, so the wrong position changes the meaning: «Φώναξε δυνατά: "Είμαι παρών!"» is the speaker shouting, while «Ποιος είπε τη φράση "είμαι παρών";» is the writer asking. Three parts: the full stop always sits outside; the exclamation and question marks sit inside when they belong to the quoted text and outside when they belong to the main clause; and two terminal marks never combine, so an inner `!` or `;` suppresses the outer full stop.
+
+Only the third part is mechanically decidable, and only that part went into `greek-scan.md`. Deciding where the mark belongs requires knowing whether it is the quotation speaking or the writer, which no pattern can see, so §20.1 and §20.2 are Pass 2 and stay with the reader. The reference says so on its face rather than leaving the next author to discover that a scan cannot enforce two thirds of the rule.
+
+Not yet wired into `scripts/greek_text_check.py`. Doing so would move §20.3 from a documented rule to an enforced one, which is where this skill's rules belong, and it needs a test pinning both directions before it can be trusted.
+
 ## 2.1.0 (2026-08-03)
 
 (Numbering note: the SKILL.md `version` field moved to 2.0.0 with the SKILL + references split, which never got its own entry here. This entry follows that field, so 1.4.0 above is the last entry under the old numbering.)
