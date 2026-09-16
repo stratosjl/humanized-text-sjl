@@ -21,6 +21,8 @@ contains Greek. Rule numbers reference `references/greek-rules.md`.
 | Mixed-language compound abbreviations as bullet headers (`Sanctions / PEP screening:`) | Foreign-only header in Greek prose | Greek-first restructure: `Έλεγχος κυρώσεων και PEP (sanctions / PEP screening):` |
 | `!».` or `;».` (terminal punctuation inside the quotes AND a full stop after) | Double terminal punctuation (Rule §20.3) | Drop the outer full stop: `«...!».` becomes `«...!»` |
 | `, και` anywhere in Greek text | Anglicism (Oxford comma; banned by Rule §7) | Remove the comma: `, και` → ` και` |
+| `, ή` anywhere in Greek text | Same anglicism, the most common escape (Rule §7) | Remove the comma: `, ή` → ` ή` |
+| `, ούτε` / `, είτε` / `, καθώς και` | Same anglicism on the other coordinating conjunctions (Rule §7) | Remove the comma |
 | `;` mid-sentence followed by lowercase Greek letter | English semicolon misused as άνω τελεία (Rule §8) | Replace `;` with `·` (U+0387), keep no leading space |
 | `αμφίπλευρ*` referring to two-party relations / agreements / documents | Wrong word for "bilateral" (Rule §9) | Replace with `διμερ*` (διμερής, διμερή, διμερείς) |
 | English legal or business term used as Greek prose noun | Anglicism in Greek prose (Rule §11) | Use Greek equivalent from the table in Rule §11 |
