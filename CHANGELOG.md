@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.0 (2026-10-17)
+
+Rule §21, subject and verb agreement where the subject's number must show from its first word, contributed by the operator.
+
+The case: «Η ισχύουσα παρ. 6 του άρθρου 6 του ν. 4209/2013 και η παρ. 4 του άρθρου 12 του ν. 4099/2012 περιλαμβάνουν». Coordination with «και» formally licenses the plural verb, but the reader starts on a singular article, crosses a long chain of genitives, and meets a plural verb that reads as a mismatch. Where the coordinated items share a head noun (παράγραφος, άρθρο, νόμος, απόφαση), the noun is written once in the plural with plural article and modifier, and the numbers follow: «Οι ισχύουσες παρ. 6 ... και 4 ... περιλαμβάνουν». Coordinated items with different heads (country names, for instance) keep the coordination; the rule says so, so that it is not over-applied.
+
+Found in a delivered Greek regulatory report, where the sentence appeared twice, once in a consultation comment. Pass 2 by nature (finding the subject needs reading); `greek-scan.md` carries an indicative row for the common shape. Not wired into `scripts/greek_text_check.py`: a regex for «Η X ... και η X ... <plural verb>» needs a reliable plural-verb test and fixtures in both directions before it could block anything.
+
 ## 2.2.0 (2026-09-02)
 
 Rule §20, punctuation with quotation marks, contributed by the operator.
