@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.4.0 (2026-10-17)
+
+Rule §21 extended by the operator: order and grouping of references to several articles or paragraphs. The noun is written once, in the plural. Numbers of the same act go in ascending order with the act named once at the end («τα άρθρα 20, 24 και 29 του ν. 4514/2018»). Numbers of different acts are grouped by act, ascending within each group, and each group closes with its own act («τα άρθρα 20 του ν. 4209/2013 και 24 και 29 του ν. 4514/2018»).
+
+The rule also says why grouping matters beyond style. The first request was to write «τα άρθρα 20 και 29 του ν. 4514/2018» in a proposed amendment where Art 20 was the amended law's own delegation article. Art 20 of ν. 4514/2018 is a different provision (requirements for OTFs), so the merged form would have changed the meaning of the amendment. Before merging references under one act, check which act each number belongs to. Scan row added to `greek-scan.md`.
+
 ## 2.3.0 (2026-10-17)
 
 Rule §21, subject and verb agreement where the subject's number must show from its first word, contributed by the operator.

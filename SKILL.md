@@ -1,6 +1,6 @@
 ---
 name: humanized-text
-version: 2.3.0
+version: 2.4.0
 description: >
   Apply a natural, human writing style to ALL written output, in any language.
   ALWAYS active: every response or generated artefact that contains prose, in
